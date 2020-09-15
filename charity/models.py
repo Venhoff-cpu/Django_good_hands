@@ -2,10 +2,8 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
-import re
-
 zip_code_regex = RegexValidator(
-    regex=r'{2}\d-{3}\d',
+    regex=r'\d{2}-\d{3}',
     message='Proszę wprowadzić kod pocztowy w odpowiednim formacie: 00-000',
 )
 phone_regex = RegexValidator(
@@ -22,12 +20,12 @@ min_bag_quantity = MinValueValidator(
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
-    def __repr__(self):
+    def __str__(self):
         return f'{self.name}'
 
-    class Meta:
-        verbose_name = 'Kategoria'
-        verbose_name_plural = 'Kategorie'
+    # class Meta:
+    #     verbose_name = 'Kategoria'
+    #     verbose_name_plural = 'Kategorie'
 
 
 class Institution(models.Model):
@@ -44,13 +42,13 @@ class Institution(models.Model):
     type = models.CharField(max_length=3, choices=TYPE_OF_INSTITUTION, default=FOUNDATION)
     categories = models.ManyToManyField(Category)
 
-    def __repr__(self):
+    def __str__(self):
         return f'{self.name}\n' \
                f'{self.description}'
 
-    class Meta:
-        verbose_name = 'Instytucja'
-        verbose_name_plural = 'Instytucje'
+    # class Meta:
+    #     verbose_name = 'Instytucja'
+    #     verbose_name_plural = 'Instytucje'
 
 
 class Donation(models.Model):
@@ -62,15 +60,15 @@ class Donation(models.Model):
     phone_number = models.CharField(max_length=15, validators=[phone_regex])
     pick_up_date = models.DateField()
     pick_up_time = models.TimeField()
-    pick_up_comment = models.CharField(max_length=256)
+    pick_up_comment = models.CharField(max_length=256, blank=True, null=True)
     institution = models.ForeignKey(Institution, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
     categories = models.ManyToManyField(Category)
 
-    def __repr__(self):
-        return f'{self.quantity} worków {self.institution.__repr__()} przekazanych\n' \
-               f'{self.institution.__repr__()}'
+    def __str__(self):
+        return f'Przekazanie {self.quantity} worków {self.categories.__str__()} przekazanych\n' \
+               f'{self.institution.__str__()}'
 
-    class Meta:
-        verbose_name = 'Dotacja'
-        verbose_name_plural = 'Dotacje'
+    # class Meta:
+    #     verbose_name = 'Dotacja'
+    #     verbose_name_plural = 'Dotacje'
