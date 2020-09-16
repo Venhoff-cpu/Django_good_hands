@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import MinValueValidator, RegexValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -22,7 +22,7 @@ min_working_hours = MinValueValidator(
     limit_value=datetime.time(hour=8, minute=00, second=00),
     message='Odbiór można zlecić w godzinach 8:00 - 20:00',
 )
-max_working_hours = MinValueValidator(
+max_working_hours = MaxValueValidator(
     limit_value=datetime.time(hour=20, minute=00, second=00),
     message='Odbiór można zlecić w godzinach 8:00 - 20:00',
 )
@@ -33,7 +33,7 @@ def one_day_hence():
 
 
 tomorrow_date = MinValueValidator(
-    limit_value=one_day_hence(),
+    limit_value=one_day_hence,
     message='Data odbioru nie może być z przeszłości',
 )
 

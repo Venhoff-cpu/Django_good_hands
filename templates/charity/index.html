@@ -80,12 +80,13 @@
       </ul>
 
       <!-- SLIDE 1 -->
+      {% for page in foundations %}
       <div class="help--slides active" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
             Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
         <ul class="help--slides-items">
-          {% for foundation in foundations %}
+          {% for foundation in page %}
           <li>
             <div class="col">
               <div class="title">{{ foundation.name }}</div>
@@ -126,19 +127,19 @@
             </li>
           {% endif %}
         {% endif %}
-        {% for num in foundations.paginator.page_range %}
+        {% for num in foundations.page_range %}
 
-          {% if foundations.number == num  %}
-          <li>
-            <a href="?page={{ num }}" class="btn btn--small btn--without-border active" data-page="{{ num }}">
-                  {{ num }}</a>
-          </li>
-          {% elif num > foundations.number|add:'-3' and num < foundations.number|add:'3' %}
+{#          {% if foundations.number == num  %}#}
+{#          <li>#}
+{#            <a href="?page={{ num }}" class="btn btn--small btn--without-border active" data-page="{{ num }}">#}
+{#                  {{ num }}</a>#}
+{#          </li>#}
+{#          {% elif num > foundations.number|add:'-3' and num < foundations.number|add:'3' %}#}
           <li>
             <a href="?page={{ num }}" class="btn btn--small btn--without-border" data-page="{{ num }}">
                 {{ num }}</a>
           </li>
-          {% endif %}
+{#          {% endif %}#}
         {% endfor %}
         {% if foundations.has_next %}
           {% if foundations.next_page_number != foundations.paginator.num_pages %}
@@ -153,8 +154,8 @@
           </li>
         {% endif %}
         </ul>
-
       </div>
+     {% endfor %}
 
 
       <!-- SLIDE 2 -->

@@ -25,7 +25,7 @@ class LandingPage(TemplateView):
 
         ctx['organizations'] = helped_organizations
         ctx['bags'] = num_of_bags['quantity__sum']
-        ctx['foundations'] = fou_paginator.get_page(page_fou)
+        ctx['foundations'] = fou_paginator
         ctx['ngos'] = ngos_paginator.get_page(page_ngo)
         ctx['local_collections'] = local_paginator.get_page(page_local)
         return ctx
