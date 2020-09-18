@@ -81,6 +81,10 @@ except ModuleNotFoundError:
     print("Fill in the data and try again!")
     exit(0)
 
+# User substitution
+# https://docs.djangoproject.com/en/1.11/topics/auth/customizing/#auth-custom-user
+
+AUTH_USER_MODEL = 'charity.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

@@ -1,9 +1,11 @@
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, FormView
 
 from .models import Institution, Donation
+from. forms import RegisterForm
 
 
 class LandingPage(TemplateView):
@@ -43,5 +45,11 @@ class LoginView(TemplateView):
     template_name = 'login.html'
 
 
-class RegisterView(TemplateView):
+class RegisterView(FormView):
     template_name = 'register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
