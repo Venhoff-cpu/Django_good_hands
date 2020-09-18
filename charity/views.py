@@ -1,12 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, View
 
-from .models import Institution, Donation
+from .models import Institution, Donation, Category
 from .forms import RegisterForm, LoginForm
 
 
@@ -35,9 +36,16 @@ class LandingPage(TemplateView):
         return ctx
 
 
-class AddDonation(TemplateView):
+class AddDonationView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy("login")
     template_name = 'form.html'
 
+    def get_context_data(self, **kwargs):
+        categories = Category.objects.all()
+        ctx = {}
+        ctx['categories'] = categories
+        return ctx
+    
 
 class AddDonationConfiramtion(TemplateView):
     template_name = 'form-confirmation.html'
