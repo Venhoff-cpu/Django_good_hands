@@ -1,10 +1,10 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, View
 
 from .models import Institution, Donation
 from .forms import RegisterForm, LoginForm
@@ -70,4 +70,10 @@ class RegisterView(FormView):
         form.save()
         return super().form_valid(form)
 
-class logout()
+
+class LogoutView(View):
+
+    def get(self, request):
+        logout(request)
+        messages.info(request, "Zostałeś wylogowany")
+        return redirect(reverse_lazy("index"))
