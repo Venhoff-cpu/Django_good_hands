@@ -14,7 +14,7 @@
         <ul class="nav--actions">
         {% if user.is_authenticated %}
           <li class="logged-user">
-            Witaj Agata
+            Witaj {{ user.first_name }}
             <ul class="dropdown">
               <li><a href="#">Profil</a></li>
               <li><a href="#">Ustawienia</a></li>

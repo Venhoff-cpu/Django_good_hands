@@ -1,11 +1,13 @@
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Sum
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 
 from .models import Institution, Donation
-from. forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 
 class LandingPage(TemplateView):
@@ -41,8 +43,22 @@ class AddDonationConfiramtion(TemplateView):
     template_name = 'form-confirmation.html'
 
 
-class LoginView(TemplateView):
-    template_name = 'login.html'
+class LoginView(FormView):
+    form_class = LoginForm
+    template_name = "login.html"
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get('login')
+        password = form.cleaned_data.get('password')
+        user = authenticate(email=email,
+                            password=password)
+        if user is not None:
+            login(self.request, user)
+            messages.info(self.request, f"Jesteś zlogowany jako {user.first_name} {user.last_name}")
+        else:
+            messages.info(self.request, f"Brak uzytkownika o podanym adresie email")
+            return redirect(reverse_lazy('register'))
+        return redirect(reverse_lazy('index'))
 
 
 class RegisterView(FormView):
@@ -53,3 +69,5 @@ class RegisterView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+
+class logout()
