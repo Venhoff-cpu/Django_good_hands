@@ -67,7 +67,7 @@ class Institution(models.Model):
                             choices=TYPE_OF_INSTITUTION,
                             default=FOUNDATION,
                             verbose_name=_('type'))
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, verbose_name=_('categories'))
 
     def __str__(self):
         return f'{self.name}\n' \
@@ -108,10 +108,10 @@ class Donation(models.Model):
                              null=True,
                              default=None,
                              verbose_name=_('user'))
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, verbose_name=_('categories'))
 
     def __str__(self):
-        return f'Przekazanie {self.quantity} worków {self.categories.__str__()} przekazanych\n' \
+        return f'Przekazanie {self.quantity} worków/a {self.categories.__str__()} przekazanych\n' \
                f'{self.institution.__str__()}'
 
     class Meta:
