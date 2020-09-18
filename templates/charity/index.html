@@ -80,13 +80,12 @@
       </ul>
 
       <!-- SLIDE 1 -->
-      {% for page in foundations %}
       <div class="help--slides active" data-id="1">
         <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
             Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
         <ul class="help--slides-items">
-          {% for foundation in page %}
+          {% for foundation in foundations %}
           <li>
             <div class="col">
               <div class="title">{{ foundation.name }}</div>
@@ -112,50 +111,15 @@
           </li>
           {% endfor %}
         </ul>
-
-        <!-- Pagination -->
-        <ul class="help--slides-pagination">
-        {% if foundation.has_previous %}
-          <li>
-              <a href="?page=1" class="btn btn--small btn--without-border active" data-page="1">Początek</a>
-          </li>
-          {% if foundations.previous_page_number != 1 %}
-            <li>
-                <a href="?page={{ foundations.previous_page_number }}"
-                   class="btn btn--small btn--without-border active" data-page="{{ foundations.previous_page_number }}">
-                    Poprzedni</a>
-            </li>
-          {% endif %}
-        {% endif %}
-        {% for num in foundations.page_range %}
-
-{#          {% if foundations.number == num  %}#}
-{#          <li>#}
-{#            <a href="?page={{ num }}" class="btn btn--small btn--without-border active" data-page="{{ num }}">#}
-{#                  {{ num }}</a>#}
-{#          </li>#}
-{#          {% elif num > foundations.number|add:'-3' and num < foundations.number|add:'3' %}#}
-          <li>
-            <a href="?page={{ num }}" class="btn btn--small btn--without-border" data-page="{{ num }}">
-                {{ num }}</a>
-          </li>
-{#          {% endif %}#}
-        {% endfor %}
-        {% if foundations.has_next %}
-          {% if foundations.next_page_number != foundations.paginator.num_pages %}
-            <li>
-              <a href="?page={{ foundations.next_page_number }}" class="btn btn--small btn--without-border"
-                 data-page="{{ foundations.next_page_number }}">Nastepny</a>
-            </li>
-          {% endif %}
-          <li>
-            <a href="?page={{ foundations.paginator.num_of_pages }}" class="btn btn--small btn--without-border"
-                 data-page="{{ foundations.paginator.num_of_pages }}">Ostatni</a>
-          </li>
-        {% endif %}
-        </ul>
       </div>
-     {% endfor %}
+
+        <!-- Pagination
+        <ul class="help--slides-pagination">
+          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+        </ul>
+        -->
 
 
       <!-- SLIDE 2 -->
@@ -191,24 +155,15 @@
             </li>
             {% endfor %}
         </ul>
-
-        <!-- Pagination -->
-        <ul class="help--slides-pagination">
-        {% for num in ngos.paginator.page_range %}
-          {% if ngos.number == num  %}
-          <li>
-            <a href="?page={{ num }}" class="btn btn--small btn--without-border active" data-page="{{ num }}">
-                  {{ num }}</a>
-          </li>
-          {% elif num > ngos.number|add:'-3' and num < ngos.number|add:'3' %}
-          <li>
-            <a href="?page={{ num }}" class="btn btn--small btn--without-border" data-page="{{ num }}">
-                {{ num }}</a>
-          </li>
-          {% endif %}
-        {% endfor %}
-        </ul>
       </div>
+
+        <!-- Pagination
+        <ul class="help--slides-pagination">
+          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
+          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
+          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
+        </ul>
+        -->
 
       <!-- SLIDE 3 -->
       <div class="help--slides" data-id="3">
@@ -243,6 +198,7 @@
             </li>
             {% endfor %}
         </ul>
+      </div>
         <!-- Pagination
         <ul class="help--slides-pagination">
           <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
