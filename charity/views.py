@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, View
 
 from .models import Institution, Donation, Category
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, DonationForm
 
 
 class LandingPage(TemplateView):
@@ -44,18 +44,18 @@ class LandingPage(TemplateView):
         return ctx
 
 
-class AddDonationView(LoginRequiredMixin, TemplateView):
+class AddDonationView(LoginRequiredMixin, FormView):
     """
     Displays donation form Pages. Only available to authenticated users.
     """
     login_url = reverse_lazy("login")
     template_name = 'form.html'
+    form_class = DonationForm
 
-    def get_context_data(self, **kwargs):
-        categories = Category.objects.all()
-        ctx = {}
-        ctx['categories'] = categories
-        return ctx
+
+class GetInstitutions(View):
+    def get(self, request):
+        categories = request.GET.get('categories')
     
 
 class AddDonationConfirmation(TemplateView):

@@ -58,12 +58,12 @@
           <!-- STEP 1: class .active is switching steps -->
           <div data-step="1" class="active">
             <h3>Zaznacz co chcesz oddać:</h3>
-            {% for category in categories %}
+            {% for value, description in form.categories.field.choices %}
             <div class="form-group form-group--checkbox">
-              <label>
-                <input type="checkbox" name="categories" value="{{ category.id }}"/>
+                <label>
+                <input type="checkbox" name="categories" value="{{ value }}"/>
                 <span class="checkbox"></span>
-                <span class="description">{{ category.name }}</span>
+                <span class="description">{{ description }}</span>
               </label>
             </div>
             {% endfor %}
@@ -79,7 +79,7 @@
             <div class="form-group form-group--inline">
               <label>
                 Liczba 60l worków:
-                <input type="number" name="bags" step="1" min="1" />
+                  {{ form.quantity }}
               </label>
             </div>
 
@@ -137,22 +137,22 @@
               <div class="form-section--column">
                 <h4>Adres odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Ulica <input type="text" name="address" /> </label>
+                  <label> Ulica {{ form.street }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label> Miasto <input type="text" name="city" /> </label>
+                  <label> Miasto {{ form.city }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
-                    Kod pocztowy <input type="text" name="postcode" />
+                    Kod pocztowy {{ form.zip_code }}
                   </label>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
-                    Numer telefonu <input type="phone" name="phone" />
+                    Numer telefonu {{ form.phone_number }}
                   </label>
                 </div>
               </div>
@@ -160,17 +160,17 @@
               <div class="form-section--column">
                 <h4>Termin odbioru</h4>
                 <div class="form-group form-group--inline">
-                  <label> Data <input type="date" name="data" /> </label>
+                  <label> Data {{ form.pick_up_date }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
-                  <label> Godzina <input type="time" name="time" /> </label>
+                  <label> Godzina {{ form.pick_up_time }} </label>
                 </div>
 
                 <div class="form-group form-group--inline">
                   <label>
                     Uwagi dla kuriera
-                    <textarea name="more_info" rows="5"></textarea>
+                      {{ form.pick_up_comment }}
                   </label>
                 </div>
               </div>
