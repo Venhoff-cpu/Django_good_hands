@@ -12,9 +12,17 @@ from .forms import RegisterForm, LoginForm
 
 
 class LandingPage(TemplateView):
+    """
+    Displays landing page.
+    """
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
+        """
+        Provides to context total number of donated bags, and number of actively supported institutions -
+        institutions which received at least one donation.
+        Provides all verified institutions split into types.
+        """
         ctx = {}
         helped_organizations = Donation.objects.values('institution').distinct().count()
         num_of_bags = Donation.objects.all().aggregate(Sum('quantity'))
@@ -37,6 +45,9 @@ class LandingPage(TemplateView):
 
 
 class AddDonationView(LoginRequiredMixin, TemplateView):
+    """
+    Displays donation form Pages. Only available to authenticated users.
+    """
     login_url = reverse_lazy("login")
     template_name = 'form.html'
 
@@ -47,11 +58,14 @@ class AddDonationView(LoginRequiredMixin, TemplateView):
         return ctx
     
 
-class AddDonationConfiramtion(TemplateView):
+class AddDonationConfirmation(TemplateView):
     template_name = 'form-confirmation.html'
 
 
 class LoginView(FormView):
+    """
+    Displays login view page. Provieds custom form for custom User.
+    """
     form_class = LoginForm
     template_name = "login.html"
 
@@ -70,6 +84,9 @@ class LoginView(FormView):
 
 
 class RegisterView(FormView):
+    """
+    Displays register view page. Provides custom form for custom User.
+    """
     template_name = 'register.html'
     form_class = RegisterForm
     success_url = reverse_lazy('login')
