@@ -92,26 +92,7 @@
 
 
           <!-- STEP 3 -->
-          <div data-step="3">
-            <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-            {% for insti in form.institutions.field.choices %}
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="radio" name="organization" value={{ insti }} />
-                <span class="checkbox radio"></span>
-                <span class="description">
-                  <div class="title">{{ insti }}</div>
-                  <div class="subtitle">
-                    {{ insti }}
-                  </div>
-                </span>
-              </label>
-            </div>
-            {% endfor %}
-            <div class="form-group form-group--buttons">
-              <button type="button" class="btn prev-step">Wstecz</button>
-              <button type="button" class="btn next-step">Dalej</button>
-            </div>
+          <div data-step="3" id="formInstitutions">
           </div>
 
           <!-- STEP 4 -->
@@ -261,9 +242,8 @@
       data: {
           'categories[]': categories,
       },
-      success: function(response) {
-        var new_options = response;
-        console.log(new_options);
+      success: function(data) {
+        $('#formInstitutions').html(data)
       },
       error: function (){
         alert('Error')},

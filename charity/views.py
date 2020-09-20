@@ -65,9 +65,7 @@ class GetInstitutions(View):
                 category_id = int(category_id)
                 institutions = Institution.objects.filter(categories=category_id)
 
-            return JsonResponse(institutions, safe=False)
-
-        return JsonResponse(None, safe=False)
+        return render(request, 'form-institutions.html', {'institutions': institutions})
 
 
 class AddDonationConfirmation(TemplateView):

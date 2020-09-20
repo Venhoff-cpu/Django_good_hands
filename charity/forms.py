@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm
+from django.db import models
 
 from .models import User, Donation, Institution, Category
 from django.contrib.auth.forms import UserCreationForm
@@ -24,7 +25,7 @@ class LoginForm(forms.Form):
 
 class DonationForm(ModelForm):
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
-    institutions = forms.ModelMultipleChoiceField(queryset=Institution.objects.all())
+    # institutions = forms.ModelMultipleChoiceField(queryset=Institution.objects.all())
     quantity = forms.IntegerField(min_value=1, max_value=10,
                                   widget=forms.NumberInput(attrs={'step': '1'}))
     pick_up_date = forms.DateField(input_formats=['%d/%m/%Y'],
@@ -38,16 +39,16 @@ class DonationForm(ModelForm):
         fields = ('categories', 'quantity', 'institution', 'street', 'city', 'zip_code', 'phone_number', 'pick_up_date',
                   'pick_up_time', 'pick_up_comment',)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if 'categories' in self.data:
-            try:
-                categories = list(self.data.get('categories'))
-                for category_id in categories:
-                    category_id = int(category_id)
-                    self.fields['institution'].queryset = Institution.objects.filter(categories=category_id)
-            except (ValueError, TypeError):
-                pass  # invalid input from the client; ignore and fallback to empty Categories queryset
-        elif self.instance.pk:
-            self.fields['institution'].queryset = self.instance.categories.institution_set.order_by('name')
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #
+    #     if 'categories' in self.data:
+    #         try:
+    #             categories = list(self.data.get('categories'))
+    #             for category_id in categories:
+    #                 category_id = int(category_id)
+    #                 self.fields['institution'].queryset = Institution.objects.filter(categories=category_id)
+    #         except (ValueError, TypeError):
+    #             pass  # invalid input from the client; ignore and fallback to empty Categories queryset
+    #     elif self.instance.pk:
+    #         self.fields['institution'].queryset = self.instance.categories.institution_set.order_by('name')
