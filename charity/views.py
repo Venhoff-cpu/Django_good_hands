@@ -1,8 +1,11 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Sum
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, View
@@ -54,9 +57,18 @@ class AddDonationView(LoginRequiredMixin, FormView):
 
 
 class GetInstitutions(View):
-    def get(self, request):
-        categories = request.GET.get('categories')
-    
+    def post(self, request):
+        print(request.POST.getlist('categories[]'))
+        categories = request.POST.getlist('categories[]')
+        if categories:
+            for category_id in categories:
+                category_id = int(category_id)
+                institutions = Institution.objects.filter(categories=category_id)
+
+            return JsonResponse(institutions, safe=False)
+
+        return JsonResponse(None, safe=False)
+
 
 class AddDonationConfirmation(TemplateView):
     template_name = 'form-confirmation.html'

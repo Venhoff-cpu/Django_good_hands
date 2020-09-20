@@ -68,7 +68,7 @@
             </div>
             {% endfor %}
             <div class="form-group form-group--buttons">
-              <button type="button" class="btn next-step">Dalej</button>
+              <button type="button" class="btn next-step" id="categories-setup">Dalej</button>
             </div>
           </div>
 
@@ -94,35 +94,20 @@
           <!-- STEP 3 -->
           <div data-step="3">
             <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-
+            {% for insti in form.institutions.field.choices %}
             <div class="form-group form-group--checkbox">
               <label>
-                <input type="radio" name="organization" value="old" />
+                <input type="radio" name="organization" value={{ insti }} />
                 <span class="checkbox radio"></span>
                 <span class="description">
-                  <div class="title">Fundacja “Bez domu”</div>
+                  <div class="title">{{ insti }}</div>
                   <div class="subtitle">
-                    Cel i misja: Pomoc dla osób nie posiadających miejsca
-                    zamieszkania
+                    {{ insti }}
                   </div>
                 </span>
               </label>
             </div>
-
-            <div class="form-group form-group--checkbox">
-              <label>
-                <input type="radio" name="organization" value="old" />
-                <span class="checkbox radio"></span>
-                <span class="description">
-                  <div class="title">Fundacja “Dla dzieci"</div>
-                  <div class="subtitle">
-                    Cel i misja: Pomoc osobom znajdującym się w trudnej sytuacji
-                    życiowej.
-                  </div>
-                </span>
-              </label>
-            </div>
-
+            {% endfor %}
             <div class="form-group form-group--buttons">
               <button type="button" class="btn prev-step">Wstecz</button>
               <button type="button" class="btn next-step">Dalej</button>
@@ -235,4 +220,54 @@
         </form>
       </div>
     </section>
+{% endblock %}
+{% block javascript %}
+<script>
+    const form = document.querySelector(".form--steps");
+    $.ajaxSetup({
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+     }
+    });
+
+    $(form.querySelector("#categories-setup")).click(function (){
+    let categories = [];
+    $.each($("input[name='categories']:checked"), function (){
+      console.log($(this).val());
+      categories.push($(this).val());
+    });
+    console.log(categories);
+    $.ajax({
+      url: "categories/",
+      type: "POST",
+      data: {
+          'categories[]': categories,
+      },
+      success: function(response) {
+        var new_options = response;
+        console.log(new_options);
+      },
+      error: function (){
+        alert('Error')},
+    });
+  });
+</script>
 {% endblock %}

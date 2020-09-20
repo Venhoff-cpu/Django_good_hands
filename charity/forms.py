@@ -24,6 +24,7 @@ class LoginForm(forms.Form):
 
 class DonationForm(ModelForm):
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.all())
+    institutions = forms.ModelMultipleChoiceField(queryset=Institution.objects.all())
     quantity = forms.IntegerField(min_value=1, max_value=10,
                                   widget=forms.NumberInput(attrs={'step': '1'}))
     pick_up_date = forms.DateField(input_formats=['%d/%m/%Y'],
@@ -39,7 +40,6 @@ class DonationForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['institution'].queryset = Institution.objects.none()
 
         if 'categories' in self.data:
             try:
