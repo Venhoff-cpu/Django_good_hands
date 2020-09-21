@@ -228,10 +228,12 @@ document.addEventListener("DOMContentLoaded", function () {
             function getSummaryInfo() {
                 let typeOfDonation = form.querySelectorAll(`input[name="categories"]:checked`);
                 let bagsInput = form.querySelector("#id_quantity").value;
+                let bagCount = parseInt(bagsInput);
+
                 let bagWord = "";
-                    if (parseInt(bagsInput) === 1){
+                    if (bagCount === 1){
                         bagWord = "worek";
-                    } else if (parseInt(bagsInput) < 5){
+                    } else if (bagCount < 5){
                         bagWord = "worki";
                     } else {
                         bagWord = "worków";

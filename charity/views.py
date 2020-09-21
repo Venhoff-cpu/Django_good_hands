@@ -40,7 +40,7 @@ class LandingPage(TemplateView):
         # page_local = self.request.GET.get('page_local')
 
         ctx['organizations'] = helped_organizations
-        ctx['bags'] = num_of_bags['quantity__sum']
+        ctx['bags'] = num_of_bags['quantity__sum'] or 0
         ctx['foundations'] = all_institutions.filter(type='FUN')
         ctx['ngos'] = all_institutions.filter(type='NGO')
         ctx['local_collections'] = all_institutions.filter(type='LOC')
@@ -59,12 +59,13 @@ class AddDonationView(LoginRequiredMixin, FormView):
 class GetInstitutions(View):
     def post(self, request):
         categories = request.POST.getlist('categories[]')
+        institutions_all = Institution.objects.all()
         if categories:
             for category_id in categories:
                 category_id = int(category_id)
-                institutions = Institution.objects.filter(categories=Category.objects.get(pk=category_id))
+                institutions_all = institutions_all.filter(categories=Category.objects.get(pk=category_id))
 
-        return render(request, 'form-institutions.html', {'institutions': institutions})
+        return render(request, 'form-institutions.html', {'institutions': institutions_all})
 
 
 class AddDonationConfirmation(TemplateView):
