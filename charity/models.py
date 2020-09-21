@@ -121,9 +121,9 @@ class Institution(models.Model):
                             verbose_name=_('type'))
     categories = models.ManyToManyField(Category, verbose_name=_('categories'))
 
-    # def __str__(self):
-    #     return f'{self.name}\n' \
-    #            f'{self.description}'
+    def __str__(self):
+        return f'{self.name}\n' \
+               f'{self.description}'
 
     class Meta:
         verbose_name = 'Instytucja'

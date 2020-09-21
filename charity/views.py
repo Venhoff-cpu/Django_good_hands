@@ -58,12 +58,11 @@ class AddDonationView(LoginRequiredMixin, FormView):
 
 class GetInstitutions(View):
     def post(self, request):
-        print(request.POST.getlist('categories[]'))
         categories = request.POST.getlist('categories[]')
         if categories:
             for category_id in categories:
                 category_id = int(category_id)
-                institutions = Institution.objects.filter(categories=category_id)
+                institutions = Institution.objects.filter(categories=Category.objects.get(pk=category_id))
 
         return render(request, 'form-institutions.html', {'institutions': institutions})
 

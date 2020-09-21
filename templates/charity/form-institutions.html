@@ -1,8 +1,7 @@
-<h3>Wybierz organizacje, której chcesz pomóc:</h3>
-{% for institution in instituions %}
+{% for institution in institutions %}
     <div class="form-group form-group--checkbox">
         <label>
-            <input type="radio" name="organization" value={{ institution.id }}/>
+            <input type="radio" name="organization" value={{ institution.id }}>
             <span class="checkbox radio"></span>
             <span class="description">
                   <div class="title">{{ institution.name }}</div>
@@ -12,14 +11,10 @@
                 </span>
         </label>
     </div>
-    {% empty %}
+{% empty %}
     <div class="form-group form-group--checkbox">
         <span class="description">
-            <div class="title">Brak instytucji mogacej przyjąć wskazane rodzaje darów.</div>
+            <div class="title">Brak instytucji mogącej przyjąć wskazane rodzaje darów.</div>
         </span>
     </div>
 {% endfor %}
-<div class="form-group form-group--buttons">
-    <button type="button" class="btn prev-step">Wstecz</button>
-    <button type="button" class="btn next-step">Dalej</button>
-</div>
