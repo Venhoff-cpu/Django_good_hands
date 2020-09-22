@@ -211,6 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$next.forEach(btn => {
                 btn.addEventListener("click", e => {
                     e.preventDefault();
+                    if(!this.validateStep(this.currentStep)){
+                        return;
+                    }
                     this.currentStep++;
                     this.updateForm();
                 });
@@ -272,10 +275,49 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
             }
 
+            // Step 5 - form summary
             summaryBtn.addEventListener("click", (event) => getSummaryInfo())
+
             // Form submit
             this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
         }
+
+        /**
+         * Form validation
+         * Prevents moving up a next slide unless all necessary inputs are provided or corrected
+         */
+        validateStep(step) {
+            let stepForValidation = formValidation.querySelector(`[data-step=${CSS.escape(step)}]`);
+            let stepTextInputs = stepForValidation.querySelectorAll("input[type='text']");
+            let stepNumberInput = stepForValidation.querySelector("input[type='number']");
+            let stepCheckboxInputs = stepForValidation.querySelectorAll(`input[name="categories"]:checked`)
+            let stepRadioInput = stepForValidation.querySelector("input[name='organization']:checked")
+
+            if (stepTextInputs.length !== 0){
+                for (let i=0; i < stepTextInputs.length; i++){
+                    if (stepTextInputs[i].value == "") {
+                        stepTextInputs[i].focus();
+                        alert("Proszę wypełnić zaznaczone pole")
+                        return false;
+                    };
+                };
+            } else if (stepNumberInput){
+                let num = stepNumberInput.value
+                if ( num <= 1 || num >= 10 || num % 1 !== 0 ){
+                    stepNumberInput.focus();
+                    alert("Ilość worków musi być w przedziale 1 - 10. Nie mogą być podane połówki");
+                    return false;
+                }
+            } else if ( stepCheckboxInputs.length === 0 && step === 1){
+                alert("Należy zaznaczyć przynajmniej jedną z opcji")
+                return false;
+            } else if (!stepRadioInput && step == 3){
+                alert("Należy wybrac organizację której chcesz przekazać dary")
+                return false;
+            }
+
+            return true;
+        };
 
         /**
          * Update form front-end
@@ -283,8 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         updateForm() {
             this.$step.innerText = this.currentStep;
-
-            // TODO: Validation
 
             this.slides.forEach(slide => {
                 slide.classList.remove("active");
@@ -312,6 +352,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    const formValidation = document.querySelector("form")
     const form = document.querySelector(".form--steps");
     if (form !== null) {
         new FormSteps(form);

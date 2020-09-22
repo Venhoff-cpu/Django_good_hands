@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Form{% endblock %}
+
 {% block header_style %}"header--form-page"{% endblock %}
 {% block header %}
     <div class="slogan container container--90">
@@ -54,7 +55,7 @@
         <div class="form--steps-container">
             <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-            <form action="form-confirmation.html" method="post">
+            <form action="form-confirmation.html" method="post" id="forValidation">
                 <!-- STEP 1: class .active is switching steps -->
                 <div data-step="1" class="active">
                     <h3>Zaznacz co chcesz oddać:</h3>
@@ -79,7 +80,8 @@
                     <div class="form-group form-group--inline">
                         <label>
                             Liczba 60l worków:
-                            {{ form.quantity }}
+                            {{ form.quantity }} <br>
+                            {{ form.quantity.errors }}
                         </label>
                     </div>
 
@@ -109,22 +111,26 @@
                             <h4>Adres odbioru</h4>
                             <div class="form-group form-group--inline">
                                 <label> Ulica {{ form.street }} </label>
+                                <label> {{ form.street.errors }} </label>
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label> Miasto {{ form.city }} </label>
+                                <label> {{ form.city.errors }} </label>
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label>
                                     Kod pocztowy {{ form.zip_code }}
                                 </label>
+                                <label> {{ form.zip_code.errors }} </label>
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label>
                                     Numer telefonu {{ form.phone_number }}
                                 </label>
+                                <label> {{ form.phone_number.errors }} </label>
                             </div>
                         </div>
 
@@ -132,10 +138,12 @@
                             <h4>Termin odbioru</h4>
                             <div class="form-group form-group--inline">
                                 <label> Data {{ form.pick_up_date }} </label>
+                                <label> {{ form.pick_up_date.errors }} </label>
                             </div>
 
                             <div class="form-group form-group--inline">
                                 <label> Godzina {{ form.pick_up_time }} </label>
+                                <label> {{ form.pick_up_time.errors }} </label>
                             </div>
 
                             <div class="form-group form-group--inline">
@@ -143,6 +151,7 @@
                                     Uwagi dla kuriera
                                     {{ form.pick_up_comment }}
                                 </label>
+                                <label> {{ form.pick_up_comment.errors }} </label>
                             </div>
                         </div>
                     </div>
