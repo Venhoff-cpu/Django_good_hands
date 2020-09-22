@@ -343,13 +343,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     $(form).on('click', '#categories-setup', function () {
         let categories = [];
+        let url = $("#formInstitutions").attr("institutions-url");
         $.each($("input[name='categories']:checked"), function () {
             console.log($(this).val());
             categories.push($(this).val());
         });
         console.log(categories);
         $.ajax({
-            url: "categories/",
+            url: url,
             type: "POST",
             data: {
                 'categories[]': categories,

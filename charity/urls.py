@@ -10,5 +10,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('form/', AddDonationView.as_view(), name='form'),
     path('form/confirmation/', AddDonationConfirmation.as_view(), name='form-pass'),
-    path('form/categories/', GetInstitutions.as_view(), name='ajax-institutions'),
+    path('ajax/categories/', GetInstitutions.as_view(), name='ajax-institutions'),
 ]

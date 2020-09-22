@@ -91,9 +91,9 @@
 
 
                 <!-- STEP 3 -->
-                <div data-step="3" id="formInstitutions">
+                <div data-step="3" id="formInstitutions" institutions-url="{% url 'ajax-institutions' %}">
                     <h3>Wybierz organizacje, której chcesz pomóc:</h3>
-
+                        <!-- DATA LOADED BY AJAX CALL -->
                     <div class="form-group form-group--buttons" id="buttons-formInstitutions">
                         <button type="button" class="btn prev-step">Wstecz</button>
                         <button type="button" class="btn next-step">Dalej</button>
