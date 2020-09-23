@@ -1,8 +1,7 @@
 from django import forms
 from django.forms import ModelForm
-from django.db import models
 
-from .models import User, Donation, Institution, Category
+from .models import User, Donation, Category, phone_regex, zip_code_regex
 from django.contrib.auth.forms import UserCreationForm
 
 
@@ -28,11 +27,17 @@ class DonationForm(ModelForm):
     quantity = forms.IntegerField(min_value=1,
                                   max_value=10,
                                   widget=forms.NumberInput(attrs={'step': '1'}))
+    street = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ulica nr. domum / nr. mieszkania'}))
+    city = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Warszawa'}))
+    phone_number = forms.CharField(validators=[phone_regex],
+                                   widget=forms.TextInput(attrs={'placeholder': '666999666'}))
+    zip_code = forms.CharField(validators=[zip_code_regex],
+                               widget=forms.TextInput(attrs={'placeholder': '00-000'}))
     pick_up_date = forms.DateField(input_formats=['%d/%m/%Y'],
                                    widget=forms.DateInput(attrs={'placeholder': 'dd/mm/yyyy'}))
     pick_up_time = forms.TimeField(input_formats=['%H:%M'],
                                    widget=forms.TimeInput(attrs={'placeholder': '--:--'}))
-    pick_up_comment = forms.CharField(widget=forms.Textarea(attrs={'rows': '5'}))
+    pick_up_comment = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '5'}))
 
     class Meta:
         model = Donation

@@ -81,7 +81,7 @@ max_working_hours = MaxValueValidator(
 
 
 def one_day_hence():
-    return timezone.now() + timezone.timedelta(days=1)
+    return timezone.now().date() + timezone.timedelta(days=1)
 
 
 tomorrow_date = MinValueValidator(
@@ -150,7 +150,6 @@ class Donation(models.Model):
                                     verbose_name=_('pick up time'),)
     pick_up_comment = models.CharField(max_length=256,
                                        blank=True,
-                                       null=True,
                                        verbose_name=_('comment'),)
     institution = models.ForeignKey(Institution,
                                     on_delete=models.CASCADE,

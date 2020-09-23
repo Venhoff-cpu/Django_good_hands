@@ -257,7 +257,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
                 typeSummary.innerHTML = stringToPass;
 
-                let charity = form.querySelector("input[name='organization']:checked");
+                let charity = form.querySelector("input[name='institution']:checked");
                 let charityValue = charity.nextElementSibling.nextElementSibling.querySelector(".title").innerHTML;
                 charitySummary.innerHTML = "Dla fundacji " + charityValue + "."
                 streetSummary.innerHTML = form.querySelector('#id_street').value;
@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", function () {
             summaryBtn.addEventListener("click", (event) => getSummaryInfo())
 
             // Form submit
-            this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
+            this.$form.querySelector("#form-submit").addEventListener("click", e => this.submit(e));
         }
 
         /**
@@ -291,8 +291,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let stepTextInputs = stepForValidation.querySelectorAll("input[type='text']");
             let stepNumberInput = stepForValidation.querySelector("input[type='number']");
             let stepCheckboxInputs = stepForValidation.querySelectorAll(`input[name="categories"]:checked`)
-            let stepRadioInput = stepForValidation.querySelector("input[name='organization']:checked")
-
+            let stepRadioInput = stepForValidation.querySelector("input[name='institution']:checked")
+            console.log(stepRadioInput)
             if (stepTextInputs.length !== 0){
                 for (let i=0; i < stepTextInputs.length; i++){
                     if (stepTextInputs[i].value == "") {
@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 };
             } else if (stepNumberInput){
                 let num = stepNumberInput.value
-                if ( num <= 1 || num >= 10 || num % 1 !== 0 ){
+                if ( num < 1 || num >= 10 || num % 1 !== 0 ){
                     stepNumberInput.focus();
                     alert("Ilość worków musi być w przedziale 1 - 10. Nie mogą być podane połówki");
                     return false;
@@ -347,12 +347,24 @@ document.addEventListener("DOMContentLoaded", function () {
          */
         submit(e) {
             e.preventDefault();
-            this.currentStep++;
-            this.updateForm();
+            $.ajax({
+                data: $("#form-id").serialize(),
+                type: $("#form-id").attr('method'),
+                url: $("#form-id").attr('action'),
+                success: function(data) {
+                     console.log("success");
+                     window.location.href = data.url;
+                },
+                error: function () {
+                     console.log('failure');
+                },
+            });
+            // this.currentStep++;
+            // this.updateForm();
         }
     }
 
-    const formValidation = document.querySelector("form")
+    const formValidation = document.querySelector("#form-id")
     const form = document.querySelector(".form--steps");
     if (form !== null) {
         new FormSteps(form);
@@ -386,10 +398,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let categories = [];
         let url = $("#formInstitutions").attr("institutions-url");
         $.each($("input[name='categories']:checked"), function () {
-            console.log($(this).val());
             categories.push($(this).val());
         });
-        console.log(categories);
         $.ajax({
             url: url,
             type: "POST",

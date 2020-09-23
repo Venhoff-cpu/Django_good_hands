@@ -1,4 +1,4 @@
-import json
+from datetime import datetime, date
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -6,11 +6,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, View
 
-from .models import Institution, Donation, Category
+from .models import Institution, Donation, Category, User
 from .forms import RegisterForm, LoginForm, DonationForm
 
 
@@ -54,6 +54,40 @@ class AddDonationView(LoginRequiredMixin, FormView):
     login_url = reverse_lazy("login")
     template_name = 'form.html'
     form_class = DonationForm
+
+
+class DonationProcessingView(View):
+    def post(self, request):
+        form = DonationForm(request.POST)
+        if form.is_valid():
+            user = get_object_or_404(User, pk=request.user.id)
+            categories_id = [int(i) for i in request.POST.getlist('categories')]
+            institution_id = request.POST.get('institution')
+            institution = Institution.objects.get(pk=institution_id)
+            for category in categories_id:
+                if not institution.categories.filter(pk=category).exists():
+                    messages.error(self.request, "Coś poszło nie tak, proszę wypełnić formularz ponownie")
+                    return redirect('form')
+
+            new_donation = Donation.objects.create(
+                quantity=request.POST.get('quantity'),
+                street=request.POST.get('street'),
+                city=request.POST.get('city'),
+                zip_code=request.POST.get('zip_code'),
+                phone_number=request.POST.get('phone_number'),
+                pick_up_date=datetime.strptime(request.POST.get('pick_up_date'), '%d/%m/%Y'),
+                pick_up_time=request.POST.get('pick_up_time'),
+                pick_up_comment=request.POST.get('pick_up_comment'),
+                user=user,
+                institution=institution,
+            )
+            for category_id in categories_id:
+                new_donation.categories.add(Category.objects.get(pk=category_id))
+
+            new_donation.save()
+            return JsonResponse({'url': 'confirmation/'})
+        else:
+            print(form.errors)
 
 
 class GetInstitutions(View):
