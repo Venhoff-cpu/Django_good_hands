@@ -8,7 +8,7 @@ from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView, View
+from django.views.generic import TemplateView, FormView, View, DetailView
 
 from .models import Institution, Donation, Category, User
 from .forms import RegisterForm, LoginForm, DonationForm
@@ -125,6 +125,23 @@ class LoginView(FormView):
             messages.info(self.request, f"Brak uzytkownika o podanym adresie email")
             return redirect(reverse_lazy('register'))
         return redirect(reverse_lazy('index'))
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    """
+    Displays user profile.
+    """
+    template_name = 'profile.html'
+    login_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        user = User.objects.get(pk=self.request.user.id)
+        ctx = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+        }
+        return ctx
 
 
 class RegisterView(FormView):

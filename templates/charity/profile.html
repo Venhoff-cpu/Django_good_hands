@@ -3,5 +3,25 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-
+    <section id="login" class="login-page">
+    {% if user.is_authenticated %}
+        <h4>Strona użytkownika</h4>
+        <div class="form-group">
+            <p>Imię: {{ first_name }}</p>
+        </div>
+        <div class="form-group">
+            <p>Naziwsko: {{ last_name }}</p>
+        </div>
+        <div class="form-group">
+            <p>Email: {{ email }}</p>
+        </div>
+    {% else %}
+        <p>Sorry, you have to be logged in to view this page -
+            <a href="{% url 'login' %}">Sign in</a>
+        </p>
+        <p>Doesn't have an account? Consider
+            <a href="{% url 'register' %}">signing up.</a>
+        </p>
+    {% endif %}
+    </section>
 {% endblock %}
