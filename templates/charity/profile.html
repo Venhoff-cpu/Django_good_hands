@@ -3,25 +3,80 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-    <section id="login" class="login-page">
-    {% if user.is_authenticated %}
-        <h4>Strona użytkownika</h4>
-        <div class="form-group">
-            <p>Imię: {{ first_name }}</p>
+        <div class="container">
+            {% if user.is_authenticated %}
+                <h2>Strona użytkownika</h2>
+                <div class="about-us--text" style="text-align: left">
+                    <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Imię: <strong>{{ first_name }}</strong>
+                    </p>
+                    <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Naziwsko:
+                        <strong>{{ last_name }}</strong></p>
+                    <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Email: {{ email }}</p>
+                    <a href="#"
+                       class="btn btn--medium">Zmień dane profilu</a>
+                </div>
+            {% else %}
+                <p>Sorry, you have to be logged in to view this page -
+                    <a href="{% url 'login' %}">Zaloguj się</a>
+                </p>
+                <p>Nie masz założonego konta?
+                    <a href="{% url 'register' %}">Załóż konto.</a>
+                </p>
+            {% endif %}
         </div>
-        <div class="form-group">
-            <p>Naziwsko: {{ last_name }}</p>
+        <div class="table-wrapper">
+            <table class="fl-table">
+                <thead>
+                <tr>
+                    <th scope="col" class="col-2">Ilość worków</th>
+                    <th scope="col" class="col-2">Kategoria daru</th>
+                    <th scope="col" class="col-3">Przkazana fundacji</th>
+                    <th scope="col" class="col-2">Planowana data / Data przkazania</th>
+                    <th scope="col" class="col-1">Czy przekazana?</th>
+                    <th scope="col" class="col-2">Akcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for donation in donations %}
+
+                    <tr {% if donation.is_taken %}
+                            style="color: dimgrey; background-color: aquamarine"
+                            {% endif %}>
+                        <td>
+                            {{ donation.quantity }}
+                        </td>
+                        <td>
+                            {% for category in donation.categories.all %}
+                                {{ category }}<br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {{ donation.institution.name }}
+                        </td>
+                        <td>
+                            {% if donation.is_taken %}
+                                {{ donation.is_taken_date }}
+                            {% else %}
+                                {{ donation.pick_up_date }}, {{ donation.pick_up_time }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ donation.get_is_taken_display }}
+                        </td>
+                        <td>
+                            <a href="#"
+                               class="btn btn--small">Szczegóły</a>
+                            {% if not donation.is_taken %}
+                            <form method="post" action="{% url 'picked-up' %}">
+                                {% csrf_token %}
+                                <button type='submit' value='{{ donation.id }}' name="is_taken"
+                                   class="btn btn--small">Potwierdź odbiór</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
-        <div class="form-group">
-            <p>Email: {{ email }}</p>
-        </div>
-    {% else %}
-        <p>Sorry, you have to be logged in to view this page -
-            <a href="{% url 'login' %}">Sign in</a>
-        </p>
-        <p>Doesn't have an account? Consider
-            <a href="{% url 'register' %}">signing up.</a>
-        </p>
-    {% endif %}
-    </section>
 {% endblock %}

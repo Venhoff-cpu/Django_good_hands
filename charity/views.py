@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, View, DetailView
+from django.utils import timezone
 
 from .models import Institution, Donation, Category, User
 from .forms import RegisterForm, LoginForm, DonationForm
@@ -56,35 +57,33 @@ class AddDonationView(LoginRequiredMixin, FormView):
     form_class = DonationForm
 
 
-class DonationProcessingView(View):
+class DonationProcessingView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
     def post(self, request):
         form = DonationForm(request.POST)
         if form.is_valid():
-            user = get_object_or_404(User, pk=request.user.id)
-            categories_id = [int(i) for i in request.POST.getlist('categories')]
-            institution_id = request.POST.get('institution')
-            institution = Institution.objects.get(pk=institution_id)
-            for category in categories_id:
-                if not institution.categories.filter(pk=category).exists():
+            categories = form.cleaned_data['categories']
+            institution = form.cleaned_data['institution']
+            for category in categories:
+                if not institution.categories.filter(pk=category.id).exists():
                     messages.error(self.request, "Coś poszło nie tak, proszę wypełnić formularz ponownie")
                     return redirect('form')
 
             new_donation = Donation.objects.create(
-                quantity=request.POST.get('quantity'),
-                street=request.POST.get('street'),
-                city=request.POST.get('city'),
-                zip_code=request.POST.get('zip_code'),
-                phone_number=request.POST.get('phone_number'),
-                pick_up_date=datetime.strptime(request.POST.get('pick_up_date'), '%d/%m/%Y'),
-                pick_up_time=request.POST.get('pick_up_time'),
-                pick_up_comment=request.POST.get('pick_up_comment'),
-                user=user,
+                quantity=form.cleaned_data['quantity'],
+                street=form.cleaned_data['street'],
+                city=form.cleaned_data['city'],
+                zip_code=form.cleaned_data['zip_code'],
+                phone_number=form.cleaned_data['phone_number'],
+                pick_up_date=form.cleaned_data['pick_up_date'],
+                pick_up_time=form.cleaned_data['pick_up_time'],
+                pick_up_comment=form.cleaned_data['pick_up_comment'],
+                user=request.user,
                 institution=institution,
             )
-            for category_id in categories_id:
-                new_donation.categories.add(Category.objects.get(pk=category_id))
+            new_donation.categories.set(categories)
 
-            new_donation.save()
             return JsonResponse({'url': 'confirmation/'})
         else:
             print(form.errors)
@@ -135,13 +134,31 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('login')
 
     def get_context_data(self, **kwargs):
-        user = User.objects.get(pk=self.request.user.id)
+        donations = Donation.objects.filter(user=self.request.user)
+
         ctx = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
+            'first_name': self.request.user.first_name,
+            'last_name': self.request.user.last_name,
+            'email': self.request.user.email,
+            'donations': donations,
         }
         return ctx
+
+
+class PickUpConfirmationView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
+    def post(self, request):
+        donation = get_object_or_404(Donation, pk=request.POST.get('is_taken'))
+        if request.user.id == donation.user.id:
+            donation.is_taken = True
+            donation.is_taken_date = datetime.now().date()
+            donation.save()
+            messages.info(self.request, f"Potwierdzono odbiór darów z dnia {donation.pick_up_date}")
+        else:
+            messages.info(self.request, "Nie udało się powteirdzić odbioru.")
+
+        return redirect('profile')
 
 
 class RegisterView(FormView):

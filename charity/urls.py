@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path
 
 from .views import LandingPage, LoginView, LogoutView, RegisterView, AddDonationView, AddDonationConfirmation, \
-    GetInstitutions, DonationProcessingView, ProfileView
+    GetInstitutions, DonationProcessingView, ProfileView, PickUpConfirmationView
 
 urlpatterns = [
     path('', LandingPage.as_view(), name='index'),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('form/', AddDonationView.as_view(), name='form'),
     path('form/confirmation/', AddDonationConfirmation.as_view(), name='form-pass'),
+    path('profile/pick-up-confirmation', PickUpConfirmationView.as_view(), name='picked-up'),
     path('ajax/form/', DonationProcessingView.as_view(), name='form-ajax'),
     path('ajax/categories/', GetInstitutions.as_view(), name='ajax-institutions'),
 ]

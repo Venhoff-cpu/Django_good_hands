@@ -41,4 +41,4 @@ class DonationForm(ModelForm):
 
     class Meta:
         model = Donation
-        exclude = ('user', 'institution')
+        exclude = ('user', 'is_taken', 'is_taken_date')
