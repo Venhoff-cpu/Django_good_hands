@@ -9,6 +9,13 @@
     <link rel="stylesheet" href={% static 'css/style.css' %} />
 </head>
 <body>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <p{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
     <header class={% block header_style %}{% endblock %}>
       <nav class="container container--70">
         <ul class="nav--actions">
@@ -17,7 +24,7 @@
             Witaj {{ user.first_name }}
             <ul class="dropdown">
               <li><a href="{% url 'profile' %}">Profil</a></li>
-              <li><a href="#">Ustawienia</a></li>
+              <li><a href="{% url 'profile-settings' %}">Ustawienia</a></li>
               <li><a href="{% url 'logout' %}">Wyloguj</a></li>
             </ul>
           </li>

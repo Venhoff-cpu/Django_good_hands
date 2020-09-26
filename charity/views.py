@@ -8,11 +8,11 @@ from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, FormView, View, DetailView
+from django.views.generic import TemplateView, FormView, View, DetailView, UpdateView
 from django.utils import timezone
 
 from .models import Institution, Donation, Category, User
-from .forms import RegisterForm, LoginForm, DonationForm
+from .forms import RegisterForm, LoginForm, DonationForm, ChangeUserForm, CustomSetPasswordForm
 
 
 class LandingPage(TemplateView):
@@ -156,9 +156,40 @@ class PickUpConfirmationView(LoginRequiredMixin, View):
             donation.save()
             messages.info(self.request, f"Potwierdzono odbiór darów z dnia {donation.pick_up_date}")
         else:
-            messages.info(self.request, "Nie udało się powteirdzić odbioru.")
+            messages.info(self.request, "Nie udało się potwierdzić odbioru.")
 
         return redirect('profile')
+
+
+class ProfileSettingsView(LoginRequiredMixin, UpdateView):
+    """Displays form for updating data about user profile"""
+    login_url = reverse_lazy('login')
+    form_class = ChangeUserForm
+    template_name = 'profile-change.html'
+    success_url = reverse_lazy("profile")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Please correct the error below.")
+        return super().form_invalid(form)
+
+
+class ChangePasswordView(LoginRequiredMixin, FormView):
+    login_url = reverse_lazy('login')
+    form_class = CustomSetPasswordForm
+    template_name = 'profile-change-pass.html'
+    success_url = reverse_lazy('profile')
+
+    def get_form_kwargs(self):
+        kwargs = super(ChangePasswordView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_success_url(self):
+        messages.success(self.request, 'Password changed successfully.')
+        return super(ChangePasswordView, self).get_success_url()
 
 
 class RegisterView(FormView):
@@ -178,5 +209,5 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        messages.info(request, "Zostałeś wylogowany")
-        return redirect(reverse_lazy("index"))
+        messages.info(request, 'Zostałeś wylogowany')
+        return redirect(reverse_lazy('index'))

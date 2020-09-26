@@ -132,8 +132,8 @@ class Institution(models.Model):
 
 class Donation(models.Model):
     BOOL_CHOICES = (
-        (True, 'Tak'),
-        (False, 'Nie'),
+        (False, _('No')),
+        (True, _('Yes')),
     )
 
     quantity = models.IntegerField(validators=[min_bag_quantity],
@@ -185,6 +185,10 @@ class Donation(models.Model):
     def __str__(self):
         return f'Przekazanie {self.quantity} worków/a {self.categories.__str__()} organizacji - \n' \
                f'{self.institution.__str__()}'
+
+    @property
+    def is_taken_str(self):
+        return _("Yes") if self.is_taken else _("No")
 
     class Meta:
         verbose_name = 'Dotacja'
