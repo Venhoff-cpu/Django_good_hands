@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import date as _date
 from django.conf import settings
 from django.core.validators import MinValueValidator, RegexValidator, MaxValueValidator
 from django.db import models
@@ -131,11 +132,8 @@ class Institution(models.Model):
 
 
 class Donation(models.Model):
-    BOOL_CHOICES = (
-        (False, _('No')),
-        (True, _('Yes')),
-    )
-
+    date_of_submission = models.DateTimeField(auto_now_add=True,
+                                              verbose_name=_('date of submission'), )
     quantity = models.IntegerField(validators=[min_bag_quantity],
                                    verbose_name=_('quantity'), )
     street = models.CharField(max_length=256,
@@ -156,8 +154,7 @@ class Donation(models.Model):
                                        blank=True,
                                        default='',
                                        verbose_name=_('comment'), )
-    is_taken = models.BooleanField(choices=BOOL_CHOICES,
-                                   default=False,
+    is_taken = models.BooleanField(default=False,
                                    verbose_name=_("picked up"), )
     is_taken_date = models.DateField(blank=True,
                                      null=True,
@@ -169,8 +166,9 @@ class Donation(models.Model):
                              on_delete=models.CASCADE,
                              null=True,
                              default=None,
-                             verbose_name=_('user'))
-    categories = models.ManyToManyField(Category, verbose_name=_('categories'))
+                             verbose_name=_('user'), )
+    categories = models.ManyToManyField(Category,
+                                        verbose_name=_('categories'), )
 
     def __init__(self, *args, **kwargs):
         super(Donation, self).__init__(*args, **kwargs)
@@ -183,14 +181,18 @@ class Donation(models.Model):
         return super(Donation, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'Przekazanie {self.quantity} worków/a {self.categories.__str__()} organizacji - \n' \
-               f'{self.institution.__str__()}'
+        return f'Przekazanie {self.quantity} worków/a {self.categories.__str__} organizacji - \n' \
+               f'{self.institution.__str__}'
 
     @property
     def is_taken_str(self):
         return _("Yes") if self.is_taken else _("No")
 
+    @property
+    def date_submitted(self):
+        return _date(self.date_of_submission, 'j E Y')
+
     class Meta:
         verbose_name = 'Dotacja'
         verbose_name_plural = 'Dotacje'
-        ordering = ['is_taken', '-pick_up_date', ]
+        ordering = ['is_taken', '-date_of_submission', ]

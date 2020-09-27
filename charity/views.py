@@ -11,7 +11,7 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, View, DetailView, UpdateView
 from django.utils import timezone
 
-from .models import Institution, Donation, Category, User
+from .models import Institution, Donation, Category
 from .forms import RegisterForm, LoginForm, DonationForm, ChangeUserForm, CustomSetPasswordForm
 
 
@@ -211,3 +211,17 @@ class LogoutView(View):
         logout(request)
         messages.info(request, 'Zostałeś wylogowany')
         return redirect(reverse_lazy('index'))
+
+
+class DonationDetailView(LoginRequiredMixin, DetailView):
+    """
+    Displays details about single donation.
+    """
+    model = Donation
+    template_name = 'donation-detail.html'
+    context_object_name = 'donation'
+    login_url = reverse_lazy('login')
+
+    # def get_object(self, queryset=None):
+    #     queryset = super(DonationDetailView, self).get_queryset()
+    #     return queryset.filter(user=self.request.user)

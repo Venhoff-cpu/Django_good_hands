@@ -26,6 +26,7 @@
             <table class="fl-table">
                 <thead>
                 <tr>
+                    <th scope="col" class="col-2">Data zgłoszenia</th>
                     <th scope="col" class="col-2">Ilość worków</th>
                     <th scope="col" class="col-2">Kategoria daru</th>
                     <th scope="col" class="col-3">Przkazana fundacji</th>
@@ -38,8 +39,11 @@
                 {% for donation in donations %}
 
                     <tr {% if donation.is_taken %}
-                            style="color: dimgrey; background-color: aquamarine"
-                            {% endif %}>
+                            style="color: black; background-color: lightgrey"
+                        {% endif %}>
+                        <td>
+                            {{ donation.date_submitted }}
+                        </td>
                         <td>
                             {{ donation.quantity }}
                         </td>
@@ -59,10 +63,10 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ donation.get_is_taken_display }}
+                            {{ donation.is_taken_str }}
                         </td>
                         <td>
-                            <a href="#"
+                            <a href="{% url 'donation-detail' donation.id %}"
                                class="btn btn--small">Szczegóły</a>
                             {% if not donation.is_taken %}
                             <form method="post" action="{% url 'picked-up' %}">
