@@ -343,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
         /**
          * Submit form
          *
-         * TODO: validation, send data to server
+         *
          */
         submit(e) {
             e.preventDefault();
@@ -412,6 +412,6 @@ document.addEventListener("DOMContentLoaded", function () {
             error: function () {
                 alert('Error')
             },
-        })
+        });
     });
 });

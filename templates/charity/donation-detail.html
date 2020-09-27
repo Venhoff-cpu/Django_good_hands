@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h2>Detale zgłoszenia</h2>
+        <div class="about-us--text" style="text-align: left">
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Data zgłoszenia <strong>{{ donation.date_submitted }}</strong></p>
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Czy zrealizowane? <strong>{{ donation.is_taken_str }}</strong></p>
+            {% if donation.is_taken %}
+                <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Data odbioru: <strong>{{ donation.is_taken_date }}</strong></p>
+                <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem; color: #bcbcbc">
+                    Zgłoszona data odbioru: <strong>{{ donation.pick_up_date }}</strong></p>
+                <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem; color: #bcbcbc">
+                    Zgłoszona godzina odbioru: <strong>{{ donation.pick_up_date }}</strong></p>
+            {% else %}
+                <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Zgłoszona data odbioru: <strong>{{ donation.pick_up_date }}</strong></p>
+                <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Zgłoszona godzina odbioru: <strong>{{ donation.pick_up_date }}</strong></p>
+            {% endif %}
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Instytucja obdarowana: <strong>{{ donation.institution }}</strong></p>
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Przekazano:</p>
+            <ul style="width: 90%; line-height: 1em; font-size: 1.8rem">
+                {% for category in donation.categories.all %}
+                    <li>{{ category }}</li>
+                {% endfor %}
+            </ul>
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">W ilości: <strong>{{ donation.quantity }} worka/worków.</strong></p>
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Adress odbioru:
+                <strong>{{ donation.street }}, {{ zip_code }} {{ city }}</strong>
+            </p>
+            <p style="width: 90%; line-height: 0.5em; font-size: 1.8rem">Telefon kontaktowy:
+                <strong>{{ donation.phone_number }}</strong>
+            </p>
+        </div>
+    </div>
+{% endblock %}

@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import date as _date
 from django.conf import settings
 from django.core.validators import MinValueValidator, RegexValidator, MaxValueValidator
 from django.db import models
@@ -131,40 +132,67 @@ class Institution(models.Model):
 
 
 class Donation(models.Model):
+    date_of_submission = models.DateTimeField(auto_now_add=True,
+                                              verbose_name=_('date of submission'), )
     quantity = models.IntegerField(validators=[min_bag_quantity],
-                                   verbose_name=_('quantity'),)
+                                   verbose_name=_('quantity'), )
     street = models.CharField(max_length=256,
-                              verbose_name=_('street'),)
+                              verbose_name=_('street'), )
     city = models.CharField(max_length=64,
-                            verbose_name=_('city'),)
+                            verbose_name=_('city'), )
     zip_code = models.CharField(max_length=6,
                                 validators=[zip_code_regex],
-                                verbose_name=_('zip code'),)
-    # Could use PhoneNumberField instead
+                                verbose_name=_('zip code'), )
     phone_number = models.CharField(max_length=15,
                                     validators=[phone_regex],
-                                    verbose_name=_('phone number'),)
+                                    verbose_name=_('phone number'), )
     pick_up_date = models.DateField(validators=[tomorrow_date],
-                                    verbose_name=_('pick up date'),)
+                                    verbose_name=_('pick up date'), )
     pick_up_time = models.TimeField(validators=[min_working_hours, max_working_hours],
-                                    verbose_name=_('pick up time'),)
+                                    verbose_name=_('pick up time'), )
     pick_up_comment = models.CharField(max_length=256,
                                        blank=True,
-                                       verbose_name=_('comment'),)
+                                       default='',
+                                       verbose_name=_('comment'), )
+    is_taken = models.BooleanField(default=False,
+                                   verbose_name=_("picked up"), )
+    is_taken_date = models.DateField(blank=True,
+                                     null=True,
+                                     verbose_name=_('pick up confirmation date'), )
     institution = models.ForeignKey(Institution,
                                     on_delete=models.CASCADE,
-                                    verbose_name=_('institution'),)
+                                    verbose_name=_('institution'), )
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              null=True,
                              default=None,
-                             verbose_name=_('user'))
-    categories = models.ManyToManyField(Category, verbose_name=_('categories'))
+                             verbose_name=_('user'), )
+    categories = models.ManyToManyField(Category,
+                                        verbose_name=_('categories'), )
+
+    def __init__(self, *args, **kwargs):
+        super(Donation, self).__init__(*args, **kwargs)
+        self.old_is_taken = self.is_taken
+
+    def save(self, *args, **kwargs):
+        """ On save where is_taken changed to True, update timestamp of is_taken_date """
+        if self.old_is_taken is False and self.is_taken is True:
+            self.is_taken_date = timezone.now()
+        return super(Donation, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'Przekazanie {self.quantity} worków/a {self.categories.__str__()} przekazanych\n' \
-               f'{self.institution.__str__()}'
+        return f'Przekazanie {self.quantity} worków/a {self.categories.__str__} organizacji - \n' \
+               f'{self.institution.__str__}'
+
+    @property
+    def is_taken_str(self):
+        return _("Yes") if self.is_taken else _("No")
+
+    @property
+    def date_submitted(self):
+        return _date(self.date_of_submission, 'j E Y')
 
     class Meta:
         verbose_name = 'Dotacja'
         verbose_name_plural = 'Dotacje'
+        ordering = ['is_taken', '-date_of_submission', ]

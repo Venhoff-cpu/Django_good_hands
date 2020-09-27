@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile settings{% endblock %}
+{% block content %}
+    <section id="register" class="login-page">
+      <h2>Zmień dane konta</h2>
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group form-group--inline">
+            <label>
+                {{ field.label }}
+                {{ field }}
+            </label>
+            <label>{{ field.errors }}</label>
+        </div>
+        {% endfor %}
+        <div class="form-group form-group--buttons">
+          <button class="btn" type="submit">Zakceptuj zmiany</button>
+          <a class="btn" href="{% url 'profile-pass-change' %}">Zmień hasło</a>
+          <a href="{% url 'profile' %}" class="btn btn--without-border">Anuluj</a>
+        </div>
+      </form>
+    </section>
+{% endblock %}
