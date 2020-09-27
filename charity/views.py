@@ -3,7 +3,7 @@ from datetime import datetime, date
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -32,19 +32,39 @@ class LandingPage(TemplateView):
         num_of_bags = Donation.objects.all().aggregate(Sum('quantity'))
         all_institutions = Institution.objects.all()
 
-        # fou_paginator = Paginator(all_institutions.filter(type='FUN'), 5)
-        # ngos_paginator = Paginator(all_institutions.filter(type='NGO'), 5)
-        # local_paginator = Paginator(all_institutions.filter(type='LOC'), 5)
-        #
-        # page_fou = self.request.GET.get('page_fou')
-        # page_ngo = self.request.GET.get('page_ngo')
-        # page_local = self.request.GET.get('page_local')
+        fou_paginator = Paginator(all_institutions.filter(type='FUN'), 5)
+        ngos_paginator = Paginator(all_institutions.filter(type='NGO'), 5)
+        local_paginator = Paginator(all_institutions.filter(type='LOC'), 5)
+
+        page_num_fou = self.request.GET.get('page_fou')
+        page_num_ngo = self.request.GET.get('page_ngo')
+        page_num_local = self.request.GET.get('page_local')
+        try:
+            model_fou = fou_paginator.page(page_num_fou)
+        except PageNotAnInteger:
+            model_fou = fou_paginator.page(1)
+        except EmptyPage:
+            model_fou = fou_paginator.page(fou_paginator.num_pages)
+
+        try:
+            model_ngo = ngos_paginator.page(page_num_ngo)
+        except PageNotAnInteger:
+            model_ngo = ngos_paginator.page(1)
+        except EmptyPage:
+            model_ngo = ngos_paginator.page(ngos_paginator.num_pages)
+
+        try:
+            model_local = local_paginator.page(page_num_local)
+        except PageNotAnInteger:
+            model_local = local_paginator.page(1)
+        except EmptyPage:
+            model_local = local_paginator.page(local_paginator.num_pages)
 
         ctx['organizations'] = helped_organizations
         ctx['bags'] = num_of_bags['quantity__sum'] or 0
-        ctx['foundations'] = all_institutions.filter(type='FUN')
-        ctx['ngos'] = all_institutions.filter(type='NGO')
-        ctx['local_collections'] = all_institutions.filter(type='LOC')
+        ctx['foundations'] = model_fou
+        ctx['ngos'] = model_ngo
+        ctx['local_collections'] = model_local
         return ctx
 
 

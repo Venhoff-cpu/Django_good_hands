@@ -2,209 +2,274 @@
 {% load static %}
 {% block title %}Index{% endblock %}
 
-    {% block header_style %}"header--main-page"{% endblock %}
-    {% block header %}
-      <div class="slogan container container--90">
+{% block header_style %}"header--main-page"{% endblock %}
+{% block header %}
+    <div class="slogan container container--90">
         <div class="slogan--item">
-          <h1>
-            Zacznij pomagać!<br />
-            Oddaj niechciane rzeczy w zaufane ręce
-          </h1>
+            <h1>
+                Zacznij pomagać!<br/>
+                Oddaj niechciane rzeczy w zaufane ręce
+            </h1>
         </div>
-      </div>
-    {% endblock %}
+    </div>
+{% endblock %}
 
 {% block content %}
     <section id="stats" class="stats">
-      <div class="container container--85">
-        <div class="stats--item">
-          <em>{{ bags }}</em>
-          <h3>Oddanych worków</h3>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum tempora!</p>
-        </div>
+        <div class="container container--85">
+            <div class="stats--item">
+                <em>{{ bags }}</em>
+                <h3>Oddanych worków</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius est beatae, quod accusamus illum
+                    tempora!</p>
+            </div>
 
-        <div class="stats--item">
-          <em>{{ organizations }}</em>
-          <h3>Wspartych organizacji</h3>
-          <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate quas quam.</p>
-        </div>
+            <div class="stats--item">
+                <em>{{ organizations }}</em>
+                <h3>Wspartych organizacji</h3>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam magnam, sint nihil cupiditate
+                    quas quam.</p>
+            </div>
 
-      </div>
+        </div>
     </section>
 
     <section id="steps" class="steps">
-      <h2>Wystarczą 4 proste kroki</h2>
+        <h2>Wystarczą 4 proste kroki</h2>
 
-      <div class="steps--container">
-        <div class="steps--item">
-          <span class="icon icon--hands"></span>
-          <h3>Wybierz rzeczy</h3>
-          <p>ubrania, zabawki, sprzęt i inne</p>
+        <div class="steps--container">
+            <div class="steps--item">
+                <span class="icon icon--hands"></span>
+                <h3>Wybierz rzeczy</h3>
+                <p>ubrania, zabawki, sprzęt i inne</p>
+            </div>
+            <div class="steps--item">
+                <span class="icon icon--arrow"></span>
+                <h3>Spakuj je</h3>
+                <p>skorzystaj z worków na śmieci</p>
+            </div>
+            <div class="steps--item">
+                <span class="icon icon--glasses"></span>
+                <h3>Zdecyduj komu chcesz pomóc</h3>
+                <p>wybierz zaufane miejsce</p>
+            </div>
+            <div class="steps--item">
+                <span class="icon icon--courier"></span>
+                <h3>Zamów kuriera</h3>
+                <p>kurier przyjedzie w dogodnym terminie</p>
+            </div>
         </div>
-        <div class="steps--item">
-          <span class="icon icon--arrow"></span>
-          <h3>Spakuj je</h3>
-          <p>skorzystaj z worków na śmieci</p>
-        </div>
-        <div class="steps--item">
-          <span class="icon icon--glasses"></span>
-          <h3>Zdecyduj komu chcesz pomóc</h3>
-          <p>wybierz zaufane miejsce</p>
-        </div>
-        <div class="steps--item">
-          <span class="icon icon--courier"></span>
-          <h3>Zamów kuriera</h3>
-          <p>kurier przyjedzie w dogodnym terminie</p>
-        </div>
-      </div>
 
-      <a href="{% url 'register' %}#register" class="btn btn--large">Załóż konto</a>
+        <a href="{% url 'register' %}#register" class="btn btn--large">Załóż konto</a>
     </section>
 
     <section id="about-us" class="about-us">
-      <div class="about-us--text">
-        <h2>O nas</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt libero optio esse quisquam illo omnis.</p>
-        <img src={% static "images/signature.svg" %} class="about-us--text-signature" alt="Signature" />
-      </div>
-      <div class="about-us--image"><img src={% static "images/about-us.jpg" %} alt="People in circle"/></div>
+        <div class="about-us--text">
+            <h2>O nas</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptas vitae animi rem pariatur incidunt
+                libero optio esse quisquam illo omnis.</p>
+            <img src={% static "images/signature.svg" %} class="about-us--text-signature" alt="Signature"/>
+        </div>
+        <div class="about-us--image"><img src={% static "images/about-us.jpg" %} alt="People in circle"/></div>
     </section>
 
-     <section id="help" class="help">
-      <h2>Komu pomagamy?</h2>
+    <section id="help" class="help">
+        <h2>Komu pomagamy?</h2>
 
-      <ul class="help--buttons">
-        <li data-id="1"><a href="#" class="btn btn--without-border active">Fundacjom</a></li>
-        <li data-id="2"><a href="#" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
-        <li data-id="3"><a href="#" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
-      </ul>
+        <ul class="help--buttons">
+            <li data-id="1"><a href="#" class="btn btn--without-border active">Fundacjom</a></li>
+            <li data-id="2"><a href="#" class="btn btn--without-border">Organizacjom pozarządowym</a></li>
+            <li data-id="3"><a href="#" class="btn btn--without-border">Lokalnym zbiórkom</a></li>
+        </ul>
 
-      <!-- SLIDE 1 -->
-      <div class="help--slides active" data-id="1">
-        <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
-            Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
+        <!-- SLIDE 1 -->
+        <div class="help--slides active" data-id="1">
+            <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
+                Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
-        <ul class="help--slides-items">
-          {% for foundation in foundations %}
-          <li>
-            <div class="col">
-              <div class="title">{{ foundation.name }}</div>
-              <div class="subtitle">{{ foundation.description }}</div>
-            </div>
-            <div class="col">
-                <div class="text">
-                    {% for category in foundation.categories.all %}
-                    {% if forloop.last  %}
-                        {{ category }}
-                    {% else %}
-                        {{ category }},
+            <ul class="help--slides-items">
+                {% for foundation in foundations %}
+                    <li>
+                        <div class="col">
+                            <div class="title">{{ foundation.name }}</div>
+                            <div class="subtitle">{{ foundation.description }}</div>
+                        </div>
+                        <div class="col">
+                            <div class="text">
+                                {% for category in foundation.categories.all %}
+                                    {% if forloop.last %}
+                                        {{ category }}
+                                    {% else %}
+                                        {{ category }},
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Aktualnie nie współpracujemy z żadną fundacją</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if foundations %}
+                <ul class="help--slides-pagination">
+                    {% if foundations.has_previous %}
+                        <a href="?page_fou={{ foundations.previous_page_number }}#help"
+                           class="btn btn--small btn--without-border">
+                            <<
+                        </a>
                     {% endif %}
+                    {% for page_num in foundations.paginator.page_range %}
+                        {% if page_num == foundations.number %}
+                            <li>
+                                <a href="?page_fou={{ page_num }}#help"
+                                   class="btn btn--small btn--without-border active"
+                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="?page_fou={{ page_num }}#help" class="btn btn--small btn--without-border"
+                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
                     {% endfor %}
-                </div>
-            </div>
-          </li>
-          {% empty %}
-          <li>
-            <div class="col">
-              <div class="title">Aktualnie nie współpracujemy z żadną fundacją</div>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-
-        <!-- Pagination
-        <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-        </ul>
-        -->
+                    {% if foundations.has_next %}
+                        <a href="?page_fou={{ foundations.next_page_number }}"
+                           class="btn btn--small btn--without-border"> >> </a>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
 
 
-      <!-- SLIDE 2 -->
-      <div class="help--slides" data-id="2">
-        <p>
-          W naszej bazie znajdziesz listę zweryfikowanych Organizacji pozarządowych, z którymi współpracujemy.
-          Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
-        </p>
-        <ul class="help--slides-items">
-            {% for ngo in ngos %}
-            <li>
-              <div class="col">
-                <div class="title">{{ ngo.name }}</div>
-                <div class="subtitle">{{ ngo.description }}</div>
-              </div>
-                <div class="col">
-                  <div class="text">
-                      {% for category in ngo.categories.all %}
-                      {% if forloop.last  %}
-                          {{ category }}
-                      {% else %}
-                          {{ category }},
-                      {% endif %}
-                      {% endfor %}
-                  </div>
-              </div>
-            </li>
-            {% empty %}
-            <li>
-              <div class="col">
-                <div class="title">Aktualnie nie współpracujemy z żadną organizacją pozarządową</div>
-              </div>
-            </li>
-            {% endfor %}
-        </ul>
-      </div>
+        <!-- SLIDE 2 -->
+        <div class="help--slides" data-id="2">
+            <p>
+                W naszej bazie znajdziesz listę zweryfikowanych Organizacji pozarządowych, z którymi współpracujemy.
+                Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
+            </p>
+            <ul class="help--slides-items">
+                {% for ngo in ngos %}
+                    <li>
+                        <div class="col">
+                            <div class="title">{{ ngo.name }}</div>
+                            <div class="subtitle">{{ ngo.description }}</div>
+                        </div>
+                        <div class="col">
+                            <div class="text">
+                                {% for category in ngo.categories.all %}
+                                    {% if forloop.last %}
+                                        {{ category }}
+                                    {% else %}
+                                        {{ category }},
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Aktualnie nie współpracujemy z żadną organizacją pozarządową</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if ngos %}
+                <ul class="help--slides-pagination">
+                    {% if ngos.has_previous %}
+                        <a href="?page_fou={{ ngos.previous_page_number }}#help"
+                           class="btn btn--small btn--without-border">
+                            <<
+                        </a>
+                    {% endif %}
+                    {% for page_num in ngos.paginator.page_range %}
+                        {% if page_num == ngos.number %}
+                            <li>
+                                <a href="?page_ngo={{ page_num }}#help"
+                                   class="btn btn--small btn--without-border active"
+                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="?page_ngo={{ page_num }}#help" class="btn btn--small btn--without-border"
+                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if ngos.has_next %}
+                        <a href="?page_ngo={{ ngos.next_page_number }}" class="btn btn--small btn--without-border">
+                            >> </a>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
 
-        <!-- Pagination
-        <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="3">3</a></li>
-        </ul>
-        -->
 
-      <!-- SLIDE 3 -->
-      <div class="help--slides" data-id="3">
-        <p>
-          Zgloszone i zweryfikowane przez nas lokalne inicjatywy (zbiórki), z którymi współpracujemy.
-          Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
-        </p>
-        <ul class="help--slides-items">
-            {% for collection in local_collections %}
-            <li>
-              <div class="col">
-                <div class="title">{{ collection.name }}</div>
-                <div class="subtitle">{{ collection.description }}</div>
-              </div>
-                <div class="col">
-                  <div class="text">
-                      {% for category in collection.categories.all %}
-                      {% if forloop.last  %}
-                          {{ category }}
-                      {% else %}
-                          {{ category }},
-                      {% endif %}
-                      {% endfor %}
-                  </div>
-              </div>
-            </li>
-            {% empty %}
-            <li>
-              <div class="col">
-                <div class="title">Aktualnie nie ma lokalnych zbiórek</div>
-              </div>
-            </li>
-            {% endfor %}
-        </ul>
-      </div>
-        <!-- Pagination
-        <ul class="help--slides-pagination">
-          <li><a href="#" class="btn btn--small btn--without-border active" data-page="1">1</a></li>
-          <li><a href="#" class="btn btn--small btn--without-border" data-page="2">2</a></li>
-        </ul>
-        -->
-      </div>
+        <!-- SLIDE 3 -->
+        <div class="help--slides" data-id="3">
+            <p>
+                Zgloszone i zweryfikowane przez nas lokalne inicjatywy (zbiórki), z którymi współpracujemy.
+                Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
+            </p>
+            <ul class="help--slides-items">
+                {% for collection in local_collections %}
+                    <li>
+                        <div class="col">
+                            <div class="title">{{ collection.name }}</div>
+                            <div class="subtitle">{{ collection.description }}</div>
+                        </div>
+                        <div class="col">
+                            <div class="text">
+                                {% for category in collection.categories.all %}
+                                    {% if forloop.last %}
+                                        {{ category }}
+                                    {% else %}
+                                        {{ category }},
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li>
+                        <div class="col">
+                            <div class="title">Aktualnie nie ma lokalnych zbiórek</div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if local_collections %}
+                <ul class="help--slides-pagination">
+                    {% if local_collections.has_previous %}
+                        <a href="?page_local={{ local_collections.previous_page_number }}#help"
+                           class="btn btn--small btn--without-border">
+                            <<
+                        </a>
+                    {% endif %}
+                    {% for page_num in local_collections.paginator.page_range %}
+                        {% if page_num == local_collections.number %}
+                            <li>
+                                <a href="?page_local={{ page_num }}#help"
+                                   class="btn btn--small btn--without-border active"
+                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="?page_local={{ page_num }}#help" class="btn btn--small btn--without-border"
+                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if local_collections.has_next %}
+                        <a href="?page_local={{ local_collections.next_page_number }}"
+                           class="btn btn--small btn--without-border"> >> </a>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
     </section>
 {% endblock %}
