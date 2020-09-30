@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$next.forEach(btn => {
                 btn.addEventListener("click", e => {
                     e.preventDefault();
-                    if(!this.validateStep(this.currentStep)){
+                    if (!this.validateStep(this.currentStep)) {
                         return;
                     }
                     this.currentStep++;
@@ -234,26 +234,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 let bagCount = parseInt(bagsInput);
 
                 let bagWord = "";
-                    if (bagCount === 1){
-                        bagWord = "worek";
-                    } else if (bagCount < 5){
-                        bagWord = "worki";
-                    } else {
-                        bagWord = "worków";
-                    };
+                if (bagCount === 1) {
+                    bagWord = "worek";
+                } else if (bagCount < 5) {
+                    bagWord = "worki";
+                } else {
+                    bagWord = "worków";
+                }
+                ;
                 let stringToPass = bagsInput + " " + bagWord + " rzeczy z kategorii: "
                 typeOfDonation.forEach((checkbox, idx, array) => {
                     let description = checkbox.parentElement.lastElementChild.innerHTML.toLowerCase()
 
-                    if (array.length === 1){
+                    if (array.length === 1) {
                         stringToPass += description + ".";
-                    } else if (idx === array.length - 1){
+                    } else if (idx === array.length - 1) {
                         stringToPass += description + ".";
-                    } else if(idx === 0){
+                    } else if (idx === 0) {
                         stringToPass += description + ", ";
                     } else {
                         stringToPass += description + ", ";
-                    };
+                    }
+                    ;
                 });
                 typeSummary.innerHTML = stringToPass;
 
@@ -268,11 +270,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 pickUpDateSummary.innerHTML = form.querySelector('#id_pick_up_date').value;
                 pickUpTimeSummary.innerHTML = form.querySelector('#id_pick_up_time').value;
                 let commentary = form.querySelector('#id_pick_up_comment').value
-                if (commentary === ""){
+                if (commentary === "") {
                     pickUpCommentSummary.innerHTML = "Brak uwag"
-                }else{
+                } else {
                     pickUpCommentSummary.innerHTML = commentary
-                };
+                }
+                ;
             }
 
             // Step 5 - form summary
@@ -293,32 +296,141 @@ document.addEventListener("DOMContentLoaded", function () {
             let stepCheckboxInputs = stepForValidation.querySelectorAll(`input[name="categories"]:checked`)
             let stepRadioInput = stepForValidation.querySelector("input[name='institution']:checked")
             console.log(stepRadioInput)
-            if (stepTextInputs.length !== 0){
-                for (let i=0; i < stepTextInputs.length; i++){
-                    if (stepTextInputs[i].value == "") {
+            console.log(stepForValidation)
+            if (stepTextInputs.length !== 0) {
+                for (let i = 0; i < stepTextInputs.length; i++) {
+                    if (stepTextInputs[i].id === "id_pick_up_date") {
+                        if (!validateDate(stepTextInputs[i])) {
+                            return false;
+                        }
+                    } else if (stepTextInputs[i].id === "id_zip_code") {
+                        if (!validateZipCode(stepTextInputs[i])) {
+                            return false;
+                        }
+                    } else if (stepTextInputs[i].id === "id_pick_up_time") {
+                        if (!validatePickUpTime(stepTextInputs[i])) {
+                            return false;
+                        }
+                    } else if (stepTextInputs[i].id === "id_phone_number") {
+                        if (!validatePhone(stepTextInputs[i])) {
+                            return false;
+                        }
+                    } else if (stepTextInputs[i].value === "") {
                         stepTextInputs[i].focus();
                         alert("Proszę wypełnić zaznaczone pole")
                         return false;
+                        };
                     };
-                };
-            } else if (stepNumberInput){
+            } else if (stepNumberInput) {
                 let num = stepNumberInput.value
-                if ( num < 1 || num >= 10 || num % 1 !== 0 ){
+                if (num < 1 || num >= 10 || num % 1 !== 0) {
                     stepNumberInput.focus();
                     alert("Ilość worków musi być w przedziale 1 - 10. Nie mogą być podane połówki");
                     return false;
-                }
-            } else if ( stepCheckboxInputs.length === 0 && step === 1){
+                    }
+            } else if (stepCheckboxInputs.length === 0 && step === 1) {
                 alert("Należy zaznaczyć przynajmniej jedną z opcji")
                 return false;
-            } else if (!stepRadioInput && step == 3){
+            } else if (!stepRadioInput && step == 3) {
                 alert("Należy wybrac organizację której chcesz przekazać dary")
                 return false;
-            }
-
+            };
             return true;
-        };
 
+            function validateDate(inputText) {
+                let dateformat = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+                // Match the date format through regular expression
+                if (inputText.value.match(dateformat)) {
+                    // Extract the string into month, date and year
+                    let pdate = inputText.value.split('/');
+
+                    let dd = parseInt(pdate[0]);
+                    let mm = parseInt(pdate[1]);
+                    let yy = parseInt(pdate[2]);
+                    // Create list of days of a month [assume there is no leap year by default]
+                    let ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                    if (mm == 1 || mm > 2) {
+                        if (dd > ListofDays[mm - 1]) {
+                            alert('Invalid date format!');
+                            return false;
+                        }
+                    }
+                    if (mm == 2) {
+                        let lyear = false;
+                        if ((!(yy % 4) && yy % 100) || !(yy % 400)) {
+                            lyear = true;
+                        }
+                        if ((lyear == false) && (dd >= 29)) {
+                            alert('Invalid date format!');
+                            return false;
+                        }
+                        if ((lyear == true) && (dd > 29)) {
+                            alert('Invalid date format!');
+                            return false;
+                        }
+                    }
+                    // Verify if provided date is from the past
+                    let dateNow = new Date()
+                    let match = /(\d+)\/(\d+)\/(\d+)/.exec(inputText.value)
+                    let dateProvided = new Date(Date.UTC(match[3], match[2]-1, match[1]));
+
+                    if (dateNow >= dateProvided) {
+                        inputText.focus();
+                        alert('Data odbioru nie może być z przeszłości!');
+                        return false;
+                    }
+                } else {
+                    inputText.focus();
+                    alert("Invalid date format!");
+                    return false;
+                }
+                return true;
+            };
+
+            function validateZipCode(inputText) {
+                let zipCodeFormat = /^\d{2}-\d{3}$/;
+                if (inputText.value.match(zipCodeFormat)) {
+                    return true;
+                } else {
+                    inputText.focus();
+                    alert("Niepoprawny kod pocztowy! Format 00-000.")
+                    return false;
+                }
+            };
+
+            function validatePhone(inputText) {
+                let phoneFormat = /^\+?1?\d{8,12}$/
+                if (!inputText.value.match(phoneFormat)) {
+                    inputText.focus();
+                    alert("Niepoprawny format numeru! Prosze podać numer stacjonarny lub komórkowy.")
+                    return false;
+                }
+                return true;
+            };
+
+            function validatePickUpTime(inputText) {
+                let timeFormat = /^([0-1]?[0-9]|[2][1-3])[:]([0-5][0-9])/;
+
+                if (inputText.value.match(timeFormat)) {
+                    // Extract the string into month, date and year
+                    let pdate = inputText.value.split(':');
+
+                    let hh = parseInt(pdate[0], 10);
+                    let mm = parseInt(pdate[1], 10);
+
+                    if (20 > hh && 8 > hh) {
+                        inputText.focus();
+                        alert("Odbiór musi być w godzinach 08:00 - 20:00");
+                        return false;
+                    };
+                    return true;
+                } else {
+                    inputText.focus();
+                    alert("Niepoprawny format godzin. Poprawny format jest w przedzaile 00:00 - 23:59");
+                    return false;
+                };
+            };
+        };
         /**
          * Update form front-end
          * Show next or previous section etc.
@@ -337,7 +449,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$stepInstructions[0].parentElement.parentElement.hidden = this.currentStep >= 6;
             this.$step.parentElement.hidden = this.currentStep >= 6;
 
-        }
+        };
 
 
         /**
@@ -351,18 +463,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 data: $("#form-id").serialize(),
                 type: $("#form-id").attr('method'),
                 url: $("#form-id").attr('action'),
-                success: function(data) {
-                     console.log("success");
-                     window.location.href = data.url;
+                success: function (data) {
+                    console.log("success");
+                    window.location.href = data.url;
                 },
                 error: function () {
-                     console.log('failure');
+                    console.log('failure');
                 },
             });
             // this.currentStep++;
             // this.updateForm();
-        }
-    }
+        };
+    };
 
     const formValidation = document.querySelector("#form-id")
     const form = document.querySelector(".form--steps");
@@ -407,7 +519,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 'categories[]': categories,
             },
             success: function (data) {
-                $('#buttons-formInstitutions').before(data)
+                if ($('#form-ajax-institutions').length) {
+                    console.log('Replaced institutions')
+                    $('#form-ajax-institutions').replaceWith(data);
+                } else{
+                    console.log('Added new institutions')
+                    $('#buttons-formInstitutions').before(data)
+                };
+
             },
             error: function () {
                 alert('Error')
