@@ -1,0 +1,27 @@
+<ul class="help--slides-items" id="ngos-list">
+    {% for ngo in ngos %}
+        <li>
+            <div class="col">
+                <div class="title">{{ ngo.name }}</div>
+                <div class="subtitle">{{ ngo.description }}</div>
+            </div>
+            <div class="col">
+                <div class="text">
+                    {% for category in ngo.categories.all %}
+                        {% if forloop.last %}
+                            {{ category }}
+                        {% else %}
+                            {{ category }},
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </li>
+    {% empty %}
+        <li>
+            <div class="col">
+                <div class="title">Aktualnie nie współpracujemy z żadną organizacją pozarządową</div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

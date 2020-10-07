@@ -73,7 +73,7 @@
         <div class="about-us--image"><img src={% static "images/about-us.jpg" %} alt="People in circle"/></div>
     </section>
 
-    <section id="help" class="help">
+    <section id="help" class="help" pagination-url={% url 'index' %}>
         <h2>Komu pomagamy?</h2>
 
         <ul class="help--buttons">
@@ -83,7 +83,7 @@
         </ul>
 
         <!-- SLIDE 1 -->
-        <div class="help--slides active" data-id="1">
+        <div class="help--slides active" data-id="1" id="foundation-list">
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
@@ -115,30 +115,30 @@
                 {% endfor %}
             </ul>
             {% if foundations %}
-                <ul class="help--slides-pagination">
+                <ul class="help--slides-pagination" id="foundation-pagination">
                     {% if foundations.has_previous %}
-                        <a href="?page_fou={{ foundations.previous_page_number }}#help"
-                           class="btn btn--small btn--without-border">
-                            <<
-                        </a>
+                        <button data-page="{{ foundations.previous_page_number }}"
+                           class="btn btn--small btn--without-border"
+                           data-pagination="foundation"><<</button>
                     {% endif %}
                     {% for page_num in foundations.paginator.page_range %}
                         {% if page_num == foundations.number %}
                             <li>
-                                <a href="?page_fou={{ page_num }}#help"
+                                <button
                                    class="btn btn--small btn--without-border active"
-                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                                   data-page="{{ page_num }}" data-pagination="foundation">{{ page_num }}</button>
                             </li>
                         {% else %}
                             <li>
-                                <a href="?page_fou={{ page_num }}#help" class="btn btn--small btn--without-border"
-                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                                <button class="btn btn--small btn--without-border"
+                                   data-page="{{ page_num }}" data-pagination="foundation">{{ page_num }}</button>
                             </li>
                         {% endif %}
                     {% endfor %}
                     {% if foundations.has_next %}
-                        <a href="?page_fou={{ foundations.next_page_number }}"
-                           class="btn btn--small btn--without-border"> >> </a>
+                        <button class="btn btn--small btn--without-border"
+                           data-page="{{ foundations.next_page_number }}"
+                           data-pagination="foundation"> >> </button>
                     {% endif %}
                 </ul>
             {% endif %}
@@ -151,7 +151,7 @@
                 W naszej bazie znajdziesz listę zweryfikowanych Organizacji pozarządowych, z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
             </p>
-            <ul class="help--slides-items">
+            <ul class="help--slides-items" id="ngos-list">
                 {% for ngo in ngos %}
                     <li>
                         <div class="col">
@@ -179,12 +179,11 @@
                 {% endfor %}
             </ul>
             {% if ngos %}
-                <ul class="help--slides-pagination">
+                <ul class="help--slides-pagination" id="ngos-pagination">
                     {% if ngos.has_previous %}
-                        <a href="?page_fou={{ ngos.previous_page_number }}#help"
-                           class="btn btn--small btn--without-border">
+                        <button class="btn btn--small btn--without-border">
                             <<
-                        </a>
+                        </button>
                     {% endif %}
                     {% for page_num in ngos.paginator.page_range %}
                         {% if page_num == ngos.number %}
@@ -215,7 +214,7 @@
                 Zgloszone i zweryfikowane przez nas lokalne inicjatywy (zbiórki), z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.
             </p>
-            <ul class="help--slides-items">
+            <ul class="help--slides-items" id="local-list">
                 {% for collection in local_collections %}
                     <li>
                         <div class="col">
@@ -243,7 +242,7 @@
                 {% endfor %}
             </ul>
             {% if local_collections %}
-                <ul class="help--slides-pagination">
+                <ul class="help--slides-pagination" id="local-pagination">
                     {% if local_collections.has_previous %}
                         <a href="?page_local={{ local_collections.previous_page_number }}#help"
                            class="btn btn--small btn--without-border">

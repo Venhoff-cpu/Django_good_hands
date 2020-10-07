@@ -62,10 +62,41 @@ document.addEventListener("DOMContentLoaded", function () {
          * TODO: callback to page change event
          */
         changePage(e) {
-            // e.preventDefault();
+            e.preventDefault();
             const page = e.target.dataset.page;
+            console.log(page)
 
-            console.log(page);
+            $('#foundation-pagination button').click(function(event){
+                // adding and removing active element
+
+                // checking which pagination slider event refers to
+                let whichPaginator = $(this).data('pagination')
+                console.log(whichPaginator)
+
+                // name of url
+                let url = $('#help').attr("pagination-url");
+                console.log('from ajax event');
+                // ajax
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data : {
+                        type_of_paginator: whichPaginator, //which paginator to refresh
+                        page_num: page, //page_number
+                    },
+                    success: function (resp) {
+                    // replace updated page
+                    if (whichPaginator === 'foundation') {
+                        $('#foundation-list').replaceWith(resp)
+                        $('#foundation-pagination button.active').removeClass('active')
+                        $('#foundation-pagination').find(`[data-page="${page}"]`).addClass('active')
+                        }
+                    },
+                    error: function () {}
+                    });
+
+                });
+            console.log('from app.js');
         }
     }
 
@@ -347,7 +378,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     let dd = parseInt(pdate[0]);
                     let mm = parseInt(pdate[1]);
                     let yy = parseInt(pdate[2]);
-                    // Create list of days of a month [assume there is no leap year by default]
+                    // Create list of days of a month [no leap year by default]
                     let ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                     if (mm == 1 || mm > 2) {
                         if (dd > ListofDays[mm - 1]) {

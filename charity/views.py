@@ -24,8 +24,14 @@ class LandingPage(TemplateView):
     """
     Displays landing page.
     """
-
     template_name = "index.html"
+    
+    def setup(self, request, *args, **kwargs):
+        self.fou_paginator = Paginator(Institution.objects.filter(type="FUN"), 5)
+        self.ngos_paginator = Paginator(Institution.objects.filter(type="NGO"), 5)
+        self.local_paginator = Paginator(Institution.objects.filter(type="LOC"), 5)
+
+        super(LandingPage, self).setup(request, *args, *kwargs)
 
     def get_context_data(self, **kwargs):
         """
@@ -36,35 +42,10 @@ class LandingPage(TemplateView):
         ctx = {}
         helped_organizations = Donation.objects.values("institution").distinct().count()
         num_of_bags = Donation.objects.all().aggregate(Sum("quantity"))
-        all_institutions = Institution.objects.all()
 
-        fou_paginator = Paginator(all_institutions.filter(type="FUN"), 5)
-        ngos_paginator = Paginator(all_institutions.filter(type="NGO"), 5)
-        local_paginator = Paginator(all_institutions.filter(type="LOC"), 5)
-
-        page_num_fou = self.request.GET.get("page_fou")
-        page_num_ngo = self.request.GET.get("page_ngo")
-        page_num_local = self.request.GET.get("page_local")
-        try:
-            model_fou = fou_paginator.page(page_num_fou)
-        except PageNotAnInteger:
-            model_fou = fou_paginator.page(1)
-        except EmptyPage:
-            model_fou = fou_paginator.page(fou_paginator.num_pages)
-
-        try:
-            model_ngo = ngos_paginator.page(page_num_ngo)
-        except PageNotAnInteger:
-            model_ngo = ngos_paginator.page(1)
-        except EmptyPage:
-            model_ngo = ngos_paginator.page(ngos_paginator.num_pages)
-
-        try:
-            model_local = local_paginator.page(page_num_local)
-        except PageNotAnInteger:
-            model_local = local_paginator.page(1)
-        except EmptyPage:
-            model_local = local_paginator.page(local_paginator.num_pages)
+        model_fou = self.fou_paginator.page(1)
+        model_ngo = self.ngos_paginator.page(1)
+        model_local = self.local_paginator.page(1)
 
         ctx["organizations"] = helped_organizations
         ctx["bags"] = num_of_bags["quantity__sum"] or 0
@@ -72,6 +53,20 @@ class LandingPage(TemplateView):
         ctx["ngos"] = model_ngo
         ctx["local_collections"] = model_local
         return ctx
+    
+    def post(self, request):
+        paginator_typ = self.request.POST.get('type_of_paginator')
+        page_num = self.request.POST.get('page_num')
+        print(page_num)
+        if paginator_typ == 'foundation':
+            model_fou = self.fou_paginator.page(page_num)
+            return render(self.request, 'foundation-pagination.html', {'foundations': model_fou})
+        elif paginator_typ == 'ngos':
+            model_ngo = self.ngos_paginator.page(page_num)
+            return render(self.request, 'foundation-pagination.html', {'ngos': model_ngo})
+        else:
+            model_local = self.local_paginator.page(page_num)
+            return render(self.request, 'foundation-pagination.html', {'ngos': model_local})
 
 
 class AddDonationView(LoginRequiredMixin, FormView):
@@ -122,7 +117,7 @@ class DonationProcessingView(LoginRequiredMixin, View):
 class GetInstitutions(View):
     def post(self, request):
         categories = request.POST.getlist("categories[]")
-        institutions_all = Institution.objects.all()
+        institutions_all = Institution.objects.all().select_related('categories')
         if categories:
             for category_id in categories:
                 category_id = int(category_id)
