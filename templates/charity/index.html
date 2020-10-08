@@ -83,11 +83,11 @@
         </ul>
 
         <!-- SLIDE 1 -->
-        <div class="help--slides active" data-id="1" id="foundation-list">
+        <div class="help--slides active" data-id="1">
             <p>W naszej bazie znajdziesz listę zweryfikowanych Fundacji, z którymi współpracujemy.
                 Możesz sprawdzić czym się zajmują, komu pomagają i czego potrzebują.</p>
 
-            <ul class="help--slides-items">
+            <ul class="help--slides-items" id="foundation-list">
                 {% for foundation in foundations %}
                     <li>
                         <div class="col">
@@ -116,11 +116,6 @@
             </ul>
             {% if foundations %}
                 <ul class="help--slides-pagination" id="foundation-pagination">
-                    {% if foundations.has_previous %}
-                        <button data-page="{{ foundations.previous_page_number }}"
-                           class="btn btn--small btn--without-border"
-                           data-pagination="foundation"><<</button>
-                    {% endif %}
                     {% for page_num in foundations.paginator.page_range %}
                         {% if page_num == foundations.number %}
                             <li>
@@ -135,11 +130,6 @@
                             </li>
                         {% endif %}
                     {% endfor %}
-                    {% if foundations.has_next %}
-                        <button class="btn btn--small btn--without-border"
-                           data-page="{{ foundations.next_page_number }}"
-                           data-pagination="foundation"> >> </button>
-                    {% endif %}
                 </ul>
             {% endif %}
         </div>
@@ -180,29 +170,19 @@
             </ul>
             {% if ngos %}
                 <ul class="help--slides-pagination" id="ngos-pagination">
-                    {% if ngos.has_previous %}
-                        <button class="btn btn--small btn--without-border">
-                            <<
-                        </button>
-                    {% endif %}
                     {% for page_num in ngos.paginator.page_range %}
                         {% if page_num == ngos.number %}
                             <li>
-                                <a href="?page_ngo={{ page_num }}#help"
-                                   class="btn btn--small btn--without-border active"
-                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                                <button class="btn btn--small btn--without-border active"
+                                   data-page="{{ page_num }}" data-pagination="ngos">{{ page_num }}</button>
                             </li>
                         {% else %}
                             <li>
-                                <a href="?page_ngo={{ page_num }}#help" class="btn btn--small btn--without-border"
-                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                                <button class="btn btn--small btn--without-border"
+                                   data-page="{{ page_num }}" data-pagination="ngos">{{ page_num }}</button>
                             </li>
                         {% endif %}
                     {% endfor %}
-                    {% if ngos.has_next %}
-                        <a href="?page_ngo={{ ngos.next_page_number }}" class="btn btn--small btn--without-border">
-                            >> </a>
-                    {% endif %}
                 </ul>
             {% endif %}
         </div>
@@ -243,30 +223,19 @@
             </ul>
             {% if local_collections %}
                 <ul class="help--slides-pagination" id="local-pagination">
-                    {% if local_collections.has_previous %}
-                        <a href="?page_local={{ local_collections.previous_page_number }}#help"
-                           class="btn btn--small btn--without-border">
-                            <<
-                        </a>
-                    {% endif %}
                     {% for page_num in local_collections.paginator.page_range %}
                         {% if page_num == local_collections.number %}
                             <li>
-                                <a href="?page_local={{ page_num }}#help"
-                                   class="btn btn--small btn--without-border active"
-                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                                <button class="btn btn--small btn--without-border active"
+                                   data-page="{{ page_num }}" data-pagination="local">{{ page_num }}</button>
                             </li>
                         {% else %}
                             <li>
-                                <a href="?page_local={{ page_num }}#help" class="btn btn--small btn--without-border"
-                                   data-page="{{ page_num }}">{{ page_num }}</a>
+                                <button class="btn btn--small btn--without-border"
+                                   data-page="{{ page_num }}" data-pagination="local">{{ page_num }}</>
                             </li>
                         {% endif %}
                     {% endfor %}
-                    {% if local_collections.has_next %}
-                        <a href="?page_local={{ local_collections.next_page_number }}"
-                           class="btn btn--small btn--without-border"> >> </a>
-                    {% endif %}
                 </ul>
             {% endif %}
         </div>

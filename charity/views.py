@@ -63,10 +63,12 @@ class LandingPage(TemplateView):
             return render(self.request, 'foundation-pagination.html', {'foundations': model_fou})
         elif paginator_typ == 'ngos':
             model_ngo = self.ngos_paginator.page(page_num)
-            return render(self.request, 'foundation-pagination.html', {'ngos': model_ngo})
-        else:
+            return render(self.request, 'ngos-pagination.html', {'ngos': model_ngo})
+        elif paginator_typ == 'local':
             model_local = self.local_paginator.page(page_num)
-            return render(self.request, 'foundation-pagination.html', {'ngos': model_local})
+            return render(self.request, 'local-pagination.html', {'local_collections': model_local})
+        else:
+            return JsonResponse({'message': 'Unrecognized institution list.'}, status=500)
 
 
 class AddDonationView(LoginRequiredMixin, FormView):

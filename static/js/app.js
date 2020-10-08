@@ -11,10 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$slidesContainers = $el.querySelectorAll(".help--slides");
             this.currentSlide = this.$buttonsContainer.querySelector(".active").parentElement.dataset.id;
             this.init();
+            console.log('hello from constructor')
         }
 
         init() {
             this.events();
+            console.log('hello from init')
         }
 
         events() {
@@ -66,9 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
             const page = e.target.dataset.page;
             console.log(page)
 
-            $('#foundation-pagination button').click(function(event){
-                // adding and removing active element
-
+            $(document).on('click', '.help--slides button', function(e){
+                e.preventDefault()
                 // checking which pagination slider event refers to
                 let whichPaginator = $(this).data('pagination')
                 console.log(whichPaginator)
@@ -87,12 +88,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     success: function (resp) {
                     // replace updated page
                     if (whichPaginator === 'foundation') {
+                        // replacing slide with new list
                         $('#foundation-list').replaceWith(resp)
                         $('#foundation-pagination button.active').removeClass('active')
                         $('#foundation-pagination').find(`[data-page="${page}"]`).addClass('active')
-                        }
+                    } else if (whichPaginator === 'ngos') {
+                        $('#ngos-list').replaceWith(resp)
+                        $('#ngos-pagination button.active').removeClass('active')
+                        $('#ngos-pagination').find(`[data-page="${page}"]`).addClass('active')
+                    } else if (whichPaginator === 'local') {
+                        $('#local-list').replaceWith(resp)
+                        $('#local-pagination button.active').removeClass('active')
+                        $('#local-pagination').find(`[data-page="${page}"]`).addClass('active')
+                    } else {
+                        alert("Unknown response from the server")
+                    }
                     },
-                    error: function () {}
+                    error: function (resp) {
+                        alert(JSON.stringify(resp.message))
+                    }
                     });
 
                 });
