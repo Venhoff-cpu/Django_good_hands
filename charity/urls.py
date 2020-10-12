@@ -14,12 +14,14 @@ from .views import (
     ProfileSettingsView,
     ProfileView,
     RegisterView,
+    VerificationView,
 )
 
 urlpatterns = [
     path("", LandingPage.as_view(), name="index"),
     path("login/", LoginView.as_view(), name="login"),
     path("register/", RegisterView.as_view(), name="register"),
+    path("register/confirmation/<user_id>/<token>/", VerificationView.as_view(), name="mail-activation"),
     path("profile/", ProfileView.as_view(), name="profile"),
     path("profile/settings/", ProfileSettingsView.as_view(), name="profile-settings"),
     path(

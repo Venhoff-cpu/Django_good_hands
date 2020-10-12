@@ -3,12 +3,18 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes, force_text
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView, View
+from django.core.mail import send_mail, EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.template.loader import render_to_string, get_template
+from django.urls import reverse
 
 from .forms import (
     ChangeUserForm,
@@ -17,7 +23,9 @@ from .forms import (
     LoginForm,
     RegisterForm,
 )
-from .models import Category, Donation, Institution
+from .models import Category, Donation, Institution, User
+from .tokens import account_activation_token
+import Good_hands.settings as settings
 
 
 class LandingPage(TemplateView):
@@ -231,14 +239,46 @@ class RegisterView(FormView):
     """
     Displays register view page. Provides custom form for custom User.
     """
-
     template_name = "register.html"
     form_class = RegisterForm
-    success_url = reverse_lazy("login")
 
     def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+        """
+        After validation, sends an email with activation link
+        """
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        token = account_activation_token.make_token(user)
+        user_id = urlsafe_base64_encode(force_bytes(user.id))
+        url = 'http://localhost:8000' + reverse('mail-activation',
+                                                kwargs={'user_id': user_id, 'token': token})
+        message = get_template('email-confirmation.html').render({
+            'confirm_url': url,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        })
+        mail = EmailMessage('Django Good Hands potwierdzenie mailowe', message, to=[user.email],
+                            from_email=settings.EMAIL_HOST_USER)
+        mail.content_subtype = 'html'
+        mail.send()
+        messages.info(self.request, f"Maile potwierdzający rejestrację został wysłany na {user.email}. "
+                                    f"Proszę potwierdzić by zakończyć rejestrację. Sprawdź spam.")
+        return redirect('login')
+
+
+class VerificationView(View):
+    def get(self, request, user_id, token):
+        user_id = force_text(urlsafe_base64_decode(user_id))
+
+        user = get_object_or_404(User, pk=user_id)
+
+        if user and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            messages.info(self.request, f"Rejestracja udana. Mozna się zalogować.")
+
+        return redirect('login')
 
 
 class LogoutView(View):

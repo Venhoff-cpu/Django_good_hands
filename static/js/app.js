@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         /**
-         * TODO: callback to page change event
+         *
          */
         changePage(e) {
             e.preventDefault();

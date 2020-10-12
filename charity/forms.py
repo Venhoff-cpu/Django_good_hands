@@ -18,9 +18,7 @@ class RegisterForm(UserCreationForm):
     def clean_username(self):
         if User.objects.filter(username=self.data["email"], is_active=True).exists():
             self.add_error("email", error="Email already in use")
-        elif User.objects.filter(username=self.data["email"], is_active=False).exists():
-            user = User.objects.get(username=self.data["email"])
-            user.is_active = True
+
         return self.data["email"]
 
     def clean(self):
