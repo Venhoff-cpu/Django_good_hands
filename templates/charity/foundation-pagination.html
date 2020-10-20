@@ -1,0 +1,27 @@
+<ul class="help--slides-items" id="foundation-list">
+    {% for foundation in foundations %}
+        <li>
+            <div class="col">
+                <div class="title">{{ foundation.name }}</div>
+                <div class="subtitle">{{ foundation.description }}</div>
+            </div>
+            <div class="col">
+                <div class="text">
+                    {% for category in foundation.categories.all %}
+                        {% if forloop.last %}
+                            {{ category }}
+                        {% else %}
+                            {{ category }},
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </li>
+    {% empty %}
+        <li>
+            <div class="col">
+                <div class="title">Aktualnie nie współpracujemy z żadną fundacją</div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

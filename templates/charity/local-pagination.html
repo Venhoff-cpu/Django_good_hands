@@ -1,0 +1,27 @@
+<ul class="help--slides-items" id="local-list">
+    {% for collection in local_collections %}
+        <li>
+            <div class="col">
+                <div class="title">{{ collection.name }}</div>
+                <div class="subtitle">{{ collection.description }}</div>
+            </div>
+            <div class="col">
+                <div class="text">
+                    {% for category in collection.categories.all %}
+                        {% if forloop.last %}
+                            {{ category }}
+                        {% else %}
+                            {{ category }},
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </li>
+    {% empty %}
+        <li>
+            <div class="col">
+                <div class="title">Aktualnie nie ma lokalnych zbiórek</div>
+            </div>
+        </li>
+    {% endfor %}
+</ul>

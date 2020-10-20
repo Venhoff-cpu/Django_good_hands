@@ -9,13 +9,6 @@
     <link rel="stylesheet" href={% static 'css/style.css' %} />
 </head>
 <body>
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <p{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
     <header class={% block header_style %}{% endblock %}>
       <nav class="container container--70">
         <ul class="nav--actions">
@@ -43,6 +36,13 @@
           <li><a href="#contact" class="btn btn--without-border">Kontakt</a></li>
         </ul>
       </nav>
+      {% if messages %}
+      <div class="messages">
+         {% for message in messages %}
+         <p{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message }}</p>
+         {% endfor %}
+      </div>
+      {% endif %}
       {% block header %}{% endblock %}
     </header>
     {% block content %}{% endblock %}
