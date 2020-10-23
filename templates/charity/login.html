@@ -3,7 +3,7 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-    <section id='login' class="login-page">
+    <section class="login-page">
       <h2>Zaloguj się</h2>
       <form method="post">
         {% csrf_token %}
@@ -12,7 +12,7 @@
         </div>
         <div class="form-group">
             {{form.password}}
-          <a href="#" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
+          <a href="{% url "password_reset" %}" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
         </div>
 
         <div class="form-group form-group--buttons">

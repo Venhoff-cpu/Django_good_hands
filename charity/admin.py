@@ -7,7 +7,7 @@ from charity.models import Category, Donation, Institution, User
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
-    """Define admin model for custom User model with no email field."""
+    """Define admin model for custom User model with no user field."""
 
     permissions_ = (
         _("Permissions"),

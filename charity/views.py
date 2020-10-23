@@ -11,7 +11,6 @@ from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView, View
 from django.core.mail import send_mail, EmailMessage
-from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.template.loader import render_to_string, get_template
 from django.urls import reverse
@@ -32,7 +31,7 @@ class LandingPage(TemplateView):
     """
     Displays landing page.
     """
-    template_name = "index.html"
+    template_name = "charity/index.html"
     
     def setup(self, request, *args, **kwargs):
         self.fou_paginator = Paginator(Institution.objects.filter(type="FUN"), 5)
@@ -68,13 +67,13 @@ class LandingPage(TemplateView):
         print(page_num)
         if paginator_typ == 'foundation':
             model_fou = self.fou_paginator.page(page_num)
-            return render(self.request, 'foundation-pagination.html', {'foundations': model_fou})
+            return render(self.request, 'charity/foundation-pagination.html', {'foundations': model_fou})
         elif paginator_typ == 'ngos':
             model_ngo = self.ngos_paginator.page(page_num)
-            return render(self.request, 'ngos-pagination.html', {'ngos': model_ngo})
+            return render(self.request, 'charity/ngos-pagination.html', {'ngos': model_ngo})
         elif paginator_typ == 'local':
             model_local = self.local_paginator.page(page_num)
-            return render(self.request, 'local-pagination.html', {'local_collections': model_local})
+            return render(self.request, 'charity/local-pagination.html', {'local_collections': model_local})
         else:
             return JsonResponse({'message': 'Unrecognized institution list.'}, status=500)
 
@@ -85,7 +84,7 @@ class AddDonationView(LoginRequiredMixin, FormView):
     """
 
     login_url = reverse_lazy("login")
-    template_name = "form.html"
+    template_name = "charity/form.html"
     form_class = DonationForm
 
 
@@ -133,11 +132,11 @@ class GetInstitutions(View):
                 category_id = int(category_id)
                 institutions_all = institutions_all.filter(categories=Category.objects.get(pk=category_id))
 
-        return render(request, "form-institutions.html", {"institutions": institutions_all})
+        return render(request, "charity/form-institutions.html", {"institutions": institutions_all})
 
 
 class AddDonationConfirmation(TemplateView):
-    template_name = "form-confirmation.html"
+    template_name = "charity/form-confirmation.html"
 
 
 class LoginView(FormView):
@@ -146,7 +145,7 @@ class LoginView(FormView):
     """
 
     form_class = LoginForm
-    template_name = "login.html"
+    template_name = "charity/login.html"
 
     def form_valid(self, form):
         email = form.cleaned_data.get("login")
@@ -168,8 +167,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     """
     Displays user profile.
     """
-
-    template_name = "profile.html"
+    template_name = "charity/profile.html"
     login_url = reverse_lazy("login")
 
     def get_context_data(self, **kwargs):
@@ -208,7 +206,7 @@ class ProfileSettingsView(LoginRequiredMixin, UpdateView):
 
     login_url = reverse_lazy("login")
     form_class = ChangeUserForm
-    template_name = "profile-change.html"
+    template_name = "charity/profile-change.html"
     success_url = reverse_lazy("profile")
 
     def get_object(self, queryset=None):
@@ -222,7 +220,7 @@ class ProfileSettingsView(LoginRequiredMixin, UpdateView):
 class ChangePasswordView(LoginRequiredMixin, FormView):
     login_url = reverse_lazy("login")
     form_class = CustomSetPasswordForm
-    template_name = "profile-change-pass.html"
+    template_name = "charity/profile-change-pass.html"
     success_url = reverse_lazy("profile")
 
     def get_form_kwargs(self):
@@ -239,7 +237,7 @@ class RegisterView(FormView):
     """
     Displays register view page. Provides custom form for custom User.
     """
-    template_name = "register.html"
+    template_name = "charity/register.html"
     form_class = RegisterForm
 
     def form_valid(self, form):
@@ -253,7 +251,7 @@ class RegisterView(FormView):
         user_id = urlsafe_base64_encode(force_bytes(user.id))
         url = 'http://localhost:8000' + reverse('mail-activation',
                                                 kwargs={'user_id': user_id, 'token': token})
-        message = get_template('email-confirmation.html').render({
+        message = get_template('charity/email-confirmation.html').render({
             'confirm_url': url,
             'first_name': user.first_name,
             'last_name': user.last_name,
@@ -268,6 +266,9 @@ class RegisterView(FormView):
 
 
 class VerificationView(View):
+    """
+    Activation token validation.
+    """
     def get(self, request, user_id, token):
         user_id = force_text(urlsafe_base64_decode(user_id))
 
@@ -294,7 +295,7 @@ class DonationDetailView(LoginRequiredMixin, DetailView):
     """
 
     model = Donation
-    template_name = "donation-detail.html"
+    template_name = "charity/donation-detail.html"
     context_object_name = "donation"
     login_url = reverse_lazy("login")
 

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import password_validation
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, PasswordResetForm
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
@@ -42,6 +42,10 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=100, widget=forms.PasswordInput(attrs={"placeholder": "Hasło"}))
 
 
+class CustomResetPasswordForm(PasswordResetForm):
+    email = forms.EmailField(label=_("Email"), max_length=254, widget=forms.TextInput(attrs={"placeholder": "Email"}))
+
+
 class ChangeUserForm(ModelForm):
     class Meta:
         model = User
@@ -71,10 +75,6 @@ class ChangeUserForm(ModelForm):
 
 
 class CustomSetPasswordForm(PasswordChangeForm):
-    error_messages = {
-        **PasswordChangeForm.error_messages,
-        'identical_password': _("Your old password and new password are the same. Please enter it again."),
-    }
     old_password = forms.CharField(
         label=_("Old password"),
         strip=False,
