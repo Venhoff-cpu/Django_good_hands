@@ -64,6 +64,9 @@ class User(AbstractUser):
 
 @receiver(pre_delete, sender=User)
 def delete_user(sender, instance, **kwargs):
+    """
+    Prevent deleting last superuser(Admin).
+    """
     superuser_count = sender.objects.filter(is_superuser=True).count()
     if instance.is_superuser and superuser_count == 1:
         raise PermissionDenied

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
 
 from charity.models import Category, Donation, Institution, User
@@ -42,6 +43,16 @@ class UserAdmin(DjangoUserAdmin):
     list_display = ("email", "first_name", "last_name", "is_staff")
     search_fields = ("email", "first_name", "last_name")
     ordering = ("email",)
+
+    def delete_queryset(self, request, queryset):
+        user = request.user
+        print(user)
+        print(user.email)
+        print(queryset)
+        if user in queryset.filter(email__exact=user.email):
+            raise PermissionDenied
+        print("zaraz usunę użytkownika.")
+        queryset.delete()
 
 
 admin.site.register(Category)
