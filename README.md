@@ -26,4 +26,4 @@ The project uses the Postgresql database system.
 
 ## Status
 
-Currently working on email notifications. 
+Praca nad formularzem kontaktowym.
