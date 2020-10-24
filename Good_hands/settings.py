@@ -118,6 +118,7 @@ STATICFILES_DIRS = [
 ]
 
 # Email Host configuration
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')

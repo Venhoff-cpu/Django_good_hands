@@ -45,6 +45,13 @@ class LoginForm(forms.Form):
 class CustomResetPasswordForm(PasswordResetForm):
     email = forms.EmailField(label=_("Email"), max_length=254, widget=forms.TextInput(attrs={"placeholder": "Email"}))
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not User.objects.filter(email__iexact=email, is_active=True).exists():
+            raise ValidationError("Brakużytkownika o podany mailu")
+
+        return email
+
 
 class ChangeUserForm(ModelForm):
     class Meta:

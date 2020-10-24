@@ -3,8 +3,11 @@ import datetime
 from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import PermissionDenied
 from django.core.validators import MaxValueValidator, MinValueValidator, RegexValidator
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 from django.template.defaultfilters import date as _date
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -57,6 +60,13 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+@receiver(pre_delete, sender=User)
+def delete_user(sender, instance, **kwargs):
+    superuser_count = sender.objects.filter(is_superuser=True).count()
+    if instance.is_superuser and superuser_count == 1:
+        raise PermissionDenied
 
 
 zip_code_regex = RegexValidator(

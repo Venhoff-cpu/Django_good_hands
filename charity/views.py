@@ -10,9 +10,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.views.generic import DetailView, FormView, TemplateView, UpdateView, View
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-from django.template.loader import render_to_string, get_template
+from django.template.loader import get_template
 from django.urls import reverse
 
 from .forms import (
