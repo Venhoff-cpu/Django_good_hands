@@ -6,6 +6,7 @@ from .views import (
     AddDonationConfirmation,
     AddDonationView,
     ChangePasswordView,
+    ContactFormView,
     DonationDetailView,
     DonationProcessingView,
     GetInstitutions,
@@ -54,6 +55,7 @@ urlpatterns = [
         PickUpConfirmationView.as_view(),
         name="picked-up",
     ),
+    path("contact/form/", ContactFormView.as_view(), name="contact"),
     path("ajax/form/", DonationProcessingView.as_view(), name="form-ajax"),
     path("ajax/categories/", GetInstitutions.as_view(), name="ajax-institutions"),
 ]

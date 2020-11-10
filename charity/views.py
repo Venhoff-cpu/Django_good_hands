@@ -24,7 +24,7 @@ from .forms import (
 )
 from .models import Category, Donation, Institution, User
 from .tokens import account_activation_token
-import Good_hands.settings as settings
+import Good_hands.settings.base as settings
 
 
 class LandingPage(TemplateView):
@@ -260,6 +260,7 @@ class RegisterView(FormView):
                             from_email=settings.EMAIL_HOST_USER)
         mail.content_subtype = 'html'
         mail.send()
+
         messages.info(self.request, f"Maile potwierdzający rejestrację został wysłany na {user.email}. "
                                     f"Proszę potwierdzić by zakończyć rejestrację. Sprawdź spam.")
         return redirect('login')
@@ -302,3 +303,25 @@ class DonationDetailView(LoginRequiredMixin, DetailView):
     # def get_object(self, queryset=None):
     #     queryset = super(DonationDetailView, self).get_queryset()
     #     return queryset.filter(user=self.request.user)
+
+
+class ContactFormView(View):
+
+    def post(self, request):
+        msg = request.POST['message']
+        name = request.POST['name']
+        surname = request.POST['surname']
+        message = get_template('contact/contact-email.html').render({
+            'message': msg,
+            'name': name,
+            'surname': surname,
+        })
+        email_list = [user.email for user in User.objects.filter(is_superuser=True)]
+        mail = EmailMessage('Django Good Hands formularz kontaktowy', message, to=email_list,
+                            from_email=settings.EMAIL_HOST_USER)
+        mail.send()
+
+        messages.info(self.request, f"Dziękujemy za wiadomość."
+                                    f"W najbliższym czasie ktoś się z Państwem skonatktuje.")
+
+        return reverse("index")
