@@ -324,4 +324,4 @@ class ContactFormView(View):
         messages.info(self.request, f"Dziękujemy za wiadomość."
                                     f"W najbliższym czasie ktoś się z Państwem skonatktuje.")
 
-        return reverse("index")
+        return redirect(reverse("index"))

@@ -26,4 +26,4 @@ The project uses the Postgresql database system.
 
 ## Status
 
-Praca nad formularzem kontaktowym.
+working on PL localization and live version.
