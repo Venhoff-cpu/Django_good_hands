@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log('document is ready. I can sleep now');
-
     /**
      * HomePage - Help section
      */
@@ -11,12 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
             this.$slidesContainers = $el.querySelectorAll(".help--slides");
             this.currentSlide = this.$buttonsContainer.querySelector(".active").parentElement.dataset.id;
             this.init();
-            console.log('hello from constructor')
         }
 
         init() {
             this.events();
-            console.log('hello from init')
         }
 
         events() {
@@ -66,17 +62,15 @@ document.addEventListener("DOMContentLoaded", function () {
         changePage(e) {
             e.preventDefault();
             const page = e.target.dataset.page;
-            console.log(page)
 
             $(document).on('click', '.help--slides button', function(e){
                 e.preventDefault()
                 // checking which pagination slider event refers to
                 let whichPaginator = $(this).data('pagination')
-                console.log(whichPaginator)
 
                 // name of url
                 let url = $('#help').attr("pagination-url");
-                console.log('from ajax event');
+
                 // ajax
                 $.ajax({
                     type: "POST",
@@ -110,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                 });
-            console.log('from app.js');
         }
     }
 
@@ -565,10 +558,8 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             success: function (data) {
                 if ($('#form-ajax-institutions').length) {
-                    console.log('Replaced institutions')
                     $('#form-ajax-institutions').replaceWith(data);
                 } else{
-                    console.log('Added new institutions')
                     $('#buttons-formInstitutions').before(data)
                 };
 
