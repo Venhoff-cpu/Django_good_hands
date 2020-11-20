@@ -3,6 +3,7 @@
 Django web apllication (PL):
 The aim of the project was to create a place where everyone will be able to give unnecessary things to trusted 
 institutions.
+Live version: https://powerful-river-82273.herokuapp.com
 
 ## Requirements
 
@@ -23,7 +24,3 @@ EMAIL_HOST_USER=<your@email.host>
 EMAIL_HOST_PASSWORD=<your-email-hots-pasw>
 ```
 The project uses the Postgresql database system.
-
-## Status
-
-working on PL localization and live version.
