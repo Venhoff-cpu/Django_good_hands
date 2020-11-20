@@ -14,10 +14,12 @@ $ pip install -r requirements.txt
 ```
 
 ## Configuration 
-### Database and OWM api
+ 
 Project uses django-environ. For configuration purposes, remove the sample tip 
 from the .env.sample file and complete the file with your data.
 ```
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1
 SECRET_KEY=<your-secret-key>
 DATABASE_URL=<your-database-url>
 EMAIL_HOST_USER=<your@email.host>
